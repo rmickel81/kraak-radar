@@ -110,6 +110,16 @@
 
         <div class="radar-illustration">
             <svg viewBox="0 0 340 340">
+                <style>
+                    @keyframes sweep{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+                    @keyframes pulse{0%,100%{opacity:.3;r:3}50%{opacity:.8;r:6}}
+                    @keyframes ping{0%{opacity:.5;r:8}100%{opacity:0;r:18}}
+                    .sweep{transform-origin:170px 170px;animation:sweep 4s linear infinite}
+                    .blip{animation:pulse 2s ease-in-out infinite}
+                    .blip:nth-child(odd){animation-delay:0s}
+                    .blip:nth-child(even){animation-delay:1s}
+                    .ring{animation:ping 2s ease-out infinite}
+                </style>
                 <defs>
                     <radialGradient id="g1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".15"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></radialGradient>
                 </defs>
@@ -122,19 +132,19 @@
                 <line x1="57" y1="57" x2="283" y2="283" stroke="var(--border)" stroke-width="1"/>
                 <line x1="283" y1="57" x2="57" y2="283" stroke="var(--border)" stroke-width="1"/>
                 <!-- Radar sweep -->
-                <path d="M170 170 L290 130 A160 160 0 0 1 170 330 Z" fill="var(--accent)" opacity=".08"/>
+                <path d="M170 170 L290 130 A160 160 0 0 1 170 330 Z" fill="var(--accent)" opacity=".08" class="sweep"/>
                 <line x1="170" y1="170" x2="290" y2="130" stroke="var(--accent)" stroke-width="2"/>
                 <!-- Blips -->
-                <circle cx="210" cy="100" r="4" fill="var(--accent)"/>
-                <circle cx="260" cy="180" r="3" fill="var(--green)"/>
-                <circle cx="140" cy="220" r="4" fill="var(--accent)"/>
-                <circle cx="90" cy="140" r="3" fill="var(--green)"/>
-                <circle cx="180" cy="240" r="5" fill="var(--accent)"/>
-                <circle cx="230" cy="240" r="3" fill="var(--green)"/>
-                <circle cx="120" cy="110" r="4" fill="var(--accent)"/>
+                <circle cx="210" cy="100" r="4" fill="var(--accent)" class="blip"/>
+                <circle cx="260" cy="180" r="3" fill="var(--green)" class="blip"/>
+                <circle cx="140" cy="220" r="4" fill="var(--accent)" class="blip"/>
+                <circle cx="90" cy="140" r="3" fill="var(--green)" class="blip"/>
+                <circle cx="180" cy="240" r="5" fill="var(--accent)" class="blip"/>
+                <circle cx="230" cy="240" r="3" fill="var(--green)" class="blip"/>
+                <circle cx="120" cy="110" r="4" fill="var(--accent)" class="blip"/>
                 <!-- Pulse rings -->
-                <circle cx="210" cy="100" r="8" fill="none" stroke="var(--accent)" stroke-width="1" opacity=".4"/>
-                <circle cx="140" cy="220" r="8" fill="none" stroke="var(--accent)" stroke-width="1" opacity=".4"/>
+                <circle cx="210" cy="100" r="8" fill="none" stroke="var(--accent)" stroke-width="1" class="ring"/>
+                <circle cx="140" cy="220" r="8" fill="none" stroke="var(--accent)" stroke-width="1" class="ring" style="animation-delay:.8s"/>
             </svg>
         </div>
 

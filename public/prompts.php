@@ -50,7 +50,7 @@ $pmIds = array_column($projectModels, 'model_id');
     <main class="app-main">
         <div class="page-header">
             <h1>Prompts</h1>
-            <p class="page-desc">Preguntas conversacionales que se lanzan contra los modelos cada día.</p>
+            <p class="page-desc">Las preguntas que se lanzan cada día contra cada modelo. Cada prompt simula una consulta real de un usuario: "¿cuál es la mejor herramienta para...?". Los resultados determinan tu visibilidad en IA.</p>
         </div>
     <div class="dash-header">
         <h2>Prompts</h2>

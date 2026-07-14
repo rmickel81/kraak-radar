@@ -79,7 +79,41 @@ if ($project) {
                 <p>Necesitas configurar prompts y modelos activos para que el sistema comience a recolectar datos.</p>
                 <p class="note">Los crons ejecutan consultas cada 5 minutos. Los primeros datos aparecerán en minutos.</p>
             </div>
-        <?php else: ?>
+        <?php endif; ?>
+
+        <?php if ($project): ?>
+        <!-- Definición de métricas -->
+        <div class="metrics-guide">
+            <div class="metric-def">
+                <span class="md-icon"><?php $_s = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'; echo $_s; ?></span>
+                <div class="md-body">
+                    <strong>Visibilidad</strong>
+                    <span>Porcentaje de veces que los asistentes de IA mencionan tu marca respecto al total de consultas. Si tienes 10 prompts contra 5 modelos (50 consultas/dia) y te mencionan en 25, tu visibilidad es del 50%.</span>
+                </div>
+            </div>
+            <div class="metric-def">
+                <span class="md-icon"><?php echo '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'; ?></span>
+                <div class="md-body">
+                    <strong>Posicion</strong>
+                    <span>Orden medio en el que apareces cuando los modelos listan varias marcas. Posicion 1 = siempre te mencionan primero. Se calcula solo sobre respuestas donde hubo mencion.</span>
+                </div>
+            </div>
+            <div class="metric-def">
+                <span class="md-icon"><?php echo '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'; ?></span>
+                <div class="md-body">
+                    <strong>Sentimiento</strong>
+                    <span>Valor entre -1.0 y 1.0 que refleja el tono de la mencion. Positivo = hablan bien de tu marca. Negativo = criticas. Neutro = mencion sin carga emocional.</span>
+                </div>
+            </div>
+            <div class="metric-def">
+                <span class="md-icon"><?php echo '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'; ?></span>
+                <div class="md-body">
+                    <strong>Fuentes</strong>
+                    <span>Dominios y URLs que los modelos citan como referencia al hablar de tu sector. Saber que fuentes alimentan a los LLMs te permite optimizar tu presencia en ellas.</span>
+                </div>
+            </div>
+        </div>
+
             <div class="dash-header">
                 <h2><?= htmlspecialchars($project['name']) ?></h2>
                 <div class="controls">

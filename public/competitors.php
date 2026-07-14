@@ -32,15 +32,13 @@ $competitors = $project ? DB::fetchAll('SELECT * FROM competitors WHERE project_
 <html lang="es">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Competidores</title><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
-<nav class="nav"><div class="nav-inner">
-    <a href="dashboard.php" class="nav-brand">Kraak Radar</a>
-    <div class="nav-links">
-        <a href="dashboard.php">Dashboard</a><a href="prompts.php">Prompts</a>
-        <a href="competitors.php" class="active">Competidores</a><a href="sources.php">Fuentes</a>
-        <a href="export.php">Exportar</a><a href="logout.php" class="btn-logout">Salir</a>
-    </div>
-</div></nav>
-<main class="main">
+<div class="app-layout">
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
+    <main class="app-main">
+        <div class="page-header">
+            <h1>Competidores</h1>
+            <p class="page-desc">Las marcas contra las que compites por visibilidad en los asistentes de IA. El sistema detecta automáticamente cuándo los modelos mencionan a tus competidores y los compara contigo.</p>
+        </div>
     <div class="dash-header"><h2>Competidores</h2>
         <select onchange="location='?project='+this.value"><?php foreach ($projects as $p): ?><option value="<?=$p['id']?>" <?=$p['id']==$projectId?'selected':''?>><?=htmlspecialchars($p['name'])?></option><?php endforeach; ?></select>
     </div>
@@ -69,5 +67,6 @@ $competitors = $project ? DB::fetchAll('SELECT * FROM competitors WHERE project_
     </div>
     <?php endif; ?>
 </main>
+</div>
 </body>
 </html>

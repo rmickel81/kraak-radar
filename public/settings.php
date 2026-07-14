@@ -103,7 +103,7 @@ $hasOpenRouter = !empty($user['openrouter_key']);
                 
                 <div class="api-section">
                     <h3>
-                        <span class="api-icon">🔗</span>
+                        <span class="api-icon"><?php echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'; ?></span>
                         OpenRouter
                         <?php if ($hasOpenRouter): ?><span class="badge badge-ok">Conectado</span>
                         <?php else: ?><span class="badge badge-off">Sin configurar</span><?php endif; ?>
@@ -114,7 +114,9 @@ $hasOpenRouter = !empty($user['openrouter_key']);
                                value="<?= htmlspecialchars($user['openrouter_key'] ?? '') ?>"
                                placeholder="sk-or-v1-..." class="input-mono" 
                                id="or-key">
-                        <button type="button" class="btn-eye" onclick="toggleKey('or-key')" title="Mostrar/Ocultar">👁</button>
+                        <button type="button" class="btn-eye" onclick="toggleKey('or-key')" title="Mostrar/Ocultar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
                     </div>
                 </div>
 
@@ -122,7 +124,7 @@ $hasOpenRouter = !empty($user['openrouter_key']);
 
                 <div class="api-section">
                     <h3>
-                        <span class="api-icon">🐋</span>
+                        <span class="api-icon"><?php echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'; ?></span>
                         DeepSeek
                         <?php if ($hasDeepSeek): ?><span class="badge badge-ok">Conectado</span>
                         <?php else: ?><span class="badge badge-off">Sin configurar</span><?php endif; ?>
@@ -133,7 +135,9 @@ $hasOpenRouter = !empty($user['openrouter_key']);
                                value="<?= htmlspecialchars($user['deepseek_key'] ?? '') ?>"
                                placeholder="sk-..." class="input-mono"
                                id="ds-key">
-                        <button type="button" class="btn-eye" onclick="toggleKey('ds-key')" title="Mostrar/Ocultar">👁</button>
+                        <button type="button" class="btn-eye" onclick="toggleKey('ds-key')" title="Mostrar/Ocultar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
                     </div>
                     <p class="api-hint">El analyzer usa <strong>deepseek-v4-flash</strong> (coste ~$0.0001 por análisis).</p>
                 </div>
@@ -141,7 +145,7 @@ $hasOpenRouter = !empty($user['openrouter_key']);
                 <div class="api-divider"></div>
 
                 <div class="api-section">
-                    <h3><span class="api-icon">📊</span> Consumo estimado este mes</h3>
+                    <h3><span class="api-icon"><?php echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'; ?></span> Consumo estimado este mes</h3>
                     <div class="cost-stats">
                         <div class="cost-stat">
                             <span class="cost-value">$<?= number_format($monthlyCost['total_cost'] ?? 0, 4) ?></span>

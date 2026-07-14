@@ -4,6 +4,7 @@
  */
 require_once dirname(__DIR__) . '/config/config.php';
 require_once dirname(__DIR__) . '/lib/db.php';
+require_once dirname(__DIR__) . '/lib/auth.php';
 $user = requireLogin();
 
 $projects = DB::fetchAll('SELECT * FROM projects WHERE user_id = ? ORDER BY name', [$user['id']]);
@@ -41,16 +42,13 @@ if ($project) {
 <html lang="es">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Fuentes</title><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
-<nav class="nav"><div class="nav-inner">
-    <a href="dashboard.php" class="nav-brand">Kraak Radar</a>
-    <div class="nav-links">
-        <a href="dashboard.php">Dashboard</a><a href="prompts.php">Prompts</a><a href="competitors.php">Competidores</a>
-        <a href="sources.php" class="active">Fuentes</a><a href="export.php">Exportar</a>
-        <a href="logout.php" class="btn-logout">Salir</a>
-    </div>
-</div></nav>
-<main class="main">
-    <div class="dash-header"><h2>Fuentes Citadas</h2>
+<div class="app-layout">
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
+    <main class="app-main">
+        <div class="page-header">
+            <h1>Fuentes Citadas</h1>
+            <p class="page-desc">Los dominios y URLs que los asistentes de IA citan como referencia al responder sobre tu sector. Saber qué fuentes utilizan te permite entender y mejorar tu posicionamiento.</p>
+        </div>
         <div class="controls">
             <select onchange="location='?project=<?=$projectId?>&days='+this.value">
                 <option value="7" <?=$days==7?'selected':''?>>7 días</option>
@@ -71,7 +69,7 @@ if ($project) {
                 <thead><tr><th>Dominio</th><th>Citas</th><th>Propias</th><th>Última vez</th></tr></thead>
                 <tbody><?php foreach ($sources as $s): ?>
                     <tr><td><?=htmlspecialchars($s['domain'])?></td><td><?=$s['citations']?></td>
-                    <td><?=$s['owned_citations'] > 0 ? '✅ x'.$s['owned_citations'] : '-'?></td>
+                    <td><?=$s['owned_citations'] > 0 ? 'Sí x'.$s['owned_citations'] : '-'?></td>
                     <td><?=$s['last_seen']?></td>
                 </tr><?php endforeach; ?></tbody>
             </table>
@@ -92,5 +90,6 @@ if ($project) {
     </div>
     <?php endif; ?>
 </main>
+</div>
 </body>
 </html>

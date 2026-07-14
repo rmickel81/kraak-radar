@@ -1,15 +1,13 @@
 <?php
-/**
- * Guarda modelos activos por proyecto
- */
 require_once dirname(__DIR__) . '/config/config.php';
 require_once dirname(__DIR__) . '/lib/db.php';
+require_once dirname(__DIR__) . '/lib/auth.php';
 $user = requireLogin();
 
 $projectId = (int) ($_POST['project_id'] ?? 0);
 $project = DB::fetchOne('SELECT * FROM projects WHERE id = ? AND user_id = ?', [$projectId, $user['id']]);
 
-if ($project if ($project && isset($_POST['save_models'])) {if ($project && isset($_POST['save_models'])) { isset($_POST["save_models"])) {
+if ($project && isset($_POST['save_models'])) {
     csrfVerify();
     $models = array_map('intval', $_POST['models'] ?? []);
     DB::execute('DELETE FROM project_models WHERE project_id = ?', [$projectId]);

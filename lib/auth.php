@@ -1,9 +1,13 @@
 <?php
 /**
  * Auth: login, sesiones seguras, CSRF, rate limiting
+ * 
+ * Convenciones:
+ * - Siempre usa initSession() antes de tocar $_SESSION
+ * - loginUser() regenera el ID de sesion para evitar session fixation
+ * - requireLogin() redirige a index.php si no hay sesion activa
  */
 
-// Iniciar sesión segura si no está iniciada
 function initSession(): void {
     if (session_status() === PHP_SESSION_NONE) {
         session_set_cookie_params([
@@ -17,7 +21,6 @@ function initSession(): void {
         session_start();
     }
 
-    // Regenerar ID periódicamente
     $regenerated = $_SESSION['_last_regenerated'] ?? 0;
     if (time() - $regenerated > 3600) {
         session_regenerate_id(true);
@@ -25,18 +28,15 @@ function initSession(): void {
     }
 }
 
-/**
- * Requiere login. Devuelve array con datos del usuario.
- */
 function requireLogin(): array {
     initSession();
 
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: index.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    if (empty($_SESSION['user_id'])) {
+        header('Location: index.php?r=' . urlencode($_SERVER['REQUEST_URI']));
         exit;
     }
 
-    $user = DB::fetchOne('SELECT * FROM users WHERE id = ?', [$_SESSION['user_id']]);
+    $user = DB::fetchOne('SELECT * FROM users WHERE id = ?', [(int) $_SESSION['user_id']]);
     if (!$user) {
         session_destroy();
         header('Location: index.php');
@@ -46,11 +46,8 @@ function requireLogin(): array {
     return $user;
 }
 
-// ── CSRF ───────────────────────────────────────────────────────────────
+// ── CSRF ──
 
-/**
- * Genera y guarda un token CSRF en sesión.
- */
 function csrfToken(): string {
     initSession();
     if (empty($_SESSION['_csrf'])) {
@@ -59,108 +56,88 @@ function csrfToken(): string {
     return $_SESSION['_csrf'];
 }
 
-/**
- * Renderiza un campo hidden con el token CSRF.
- */
 function csrfField(): string {
     return '<input type="hidden" name="_csrf" value="' . csrfToken() . '">';
 }
 
-/**
- * Verifica el token CSRF. Muestra error y muere si falla.
- */
 function csrfVerify(): void {
     initSession();
-    $token = $_POST['_csrf'] ?? '';
-    if (empty($token) || !hash_equals($_SESSION['_csrf'] ?? '', $token)) {
+    $token  = $_POST['_csrf'] ?? '';
+    $expect = $_SESSION['_csrf'] ?? '';
+    if ($token === '' || !hash_equals($expect, $token)) {
         http_response_code(403);
-        echo json_encode(['error' => 'Token CSRF inválido. Recarga la página.']);
-        exit;
+        die(json_encode(['error' => 'CSRF token invalido. Recarga la pagina.']));
     }
 }
 
-/**
- * Verifica CSRF solo si es POST. Para llamadas AJAX que verifican aparte.
- */
-function csrfVerifyPost(): void {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        csrfVerify();
-    }
-}
+// ── Rate Limiting ──
 
-// ── Rate Limiting (login) ──────────────────────────────────────────────
-
-/**
- * Rate limiter simple basado en IP + archivo.
- * Permite N intentos en una ventana de tiempo.
- */
-function checkRateLimit(string $action, int $maxAttempts = 5, int $windowSeconds = 300): bool {
-    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+function checkRateLimit(string $action, int $max = 5, int $window = 300): bool {
+    $ip   = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
     $file = sys_get_temp_dir() . '/krl_' . md5($action . '_' . $ip);
-    $now = time();
+    $now  = time();
 
-    $data = [];
-    if (file_exists($file)) {
-        $raw = file_get_contents($file);
-        $data = json_decode($raw, true) ?: [];
+    $attempts = [];
+    if (is_file($file)) {
+        $data = json_decode(file_get_contents($file), true);
+        if (is_array($data)) {
+            $attempts = $data;
+        }
     }
 
-    // Limpiar entradas antiguas
-    $data = array_filter($data, fn($t) => $t > $now - $windowSeconds);
+    $attempts = array_values(array_filter($attempts, fn($t) => $t > $now - $window));
 
-    if (count($data) >= $maxAttempts) {
-        return false; // Bloqueado
+    if (count($attempts) >= $max) {
+        return false;
     }
 
-    $data[] = $now;
-    file_put_contents($file, json_encode($data), LOCK_EX);
-    return true; // Permiso concedido
+    $attempts[] = $now;
+    file_put_contents($file, json_encode($attempts), LOCK_EX);
+    return true;
 }
 
-/**
- * Cuántos segundos quedan para que se libere el rate limit.
- */
 function rateLimitRemaining(string $action): int {
-    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $ip   = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
     $file = sys_get_temp_dir() . '/krl_' . md5($action . '_' . $ip);
-    if (!file_exists($file)) return 0;
+    if (!is_file($file)) return 0;
 
-    $data = json_decode(file_get_contents($file), true) ?: [];
-    if (empty($data)) return 0;
+    $data = json_decode(file_get_contents($file), true);
+    if (!is_array($data) || empty($data)) return 0;
 
-    $oldest = min($data);
-    $remaining = 300 - (time() - $oldest);
+    $remaining = 300 - (time() - min($data));
     return max(0, $remaining);
 }
 
-// ── Login / Logout ─────────────────────────────────────────────────────
+// ── Login / Logout ──
 
 function loginUser(string $email, string $password): array {
     $result = ['success' => false, 'error' => ''];
 
     if (!checkRateLimit('login')) {
-        $remaining = rateLimitRemaining('login');
-        $result['error'] = "Demasiados intentos. Espera {$remaining} segundos.";
+        $result['error'] = 'Demasiados intentos. Espera ' . rateLimitRemaining('login') . ' segundos.';
         return $result;
     }
 
     $user = DB::fetchOne('SELECT * FROM users WHERE email = ?', [$email]);
     if (!$user || !password_verify($password, $user['password_hash'])) {
-        $result['error'] = 'Email o contraseña incorrectos.';
+        $result['error'] = 'Email o contrasena incorrectos.';
         return $result;
     }
 
     initSession();
-    $_SESSION['user_id'] = (int) $user['id'];
-    $_SESSION['_last_regenerated'] = time();
+    session_regenerate_id(true);
+    $_SESSION['user_id']            = (int) $user['id'];
+    $_SESSION['_last_regenerated']  = time();
+    unset($_SESSION['_csrf']);
+
     $result['success'] = true;
     return $result;
 }
 
 function logoutUser(): void {
     initSession();
-    $_SESSION = [];
     $params = session_get_cookie_params();
     setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    $_SESSION = [];
     session_destroy();
 }

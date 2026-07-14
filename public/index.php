@@ -20,16 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $action   = $_POST['action'] ?? 'login';
     
-    if (!checkRateLimit('login')) {
-        $remaining = rateLimitRemaining('login');
-        $error = "Demasiados intentos. Espera {$remaining} segundos antes de intentar de nuevo.";
-        $rateLimited = true;
-    } elseif ($action === 'login') {
+    if ($action === 'login') {
         $result = loginUser($email, $password);
         if ($result['success']) {
-            // Actualizar último login
             DB::execute('UPDATE users SET last_login_at = NOW() WHERE id = ?', [$_SESSION['user_id']]);
-            $redirect = $_GET['redirect'] ?? 'dashboard.php';
+            $redirect = $_GET['r'] ?? 'dashboard.php';
             header('Location: ' . $redirect);
             exit;
         }

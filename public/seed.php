@@ -7,6 +7,7 @@
  */
 require_once dirname(__DIR__) . '/config/config.php';
 require_once dirname(__DIR__) . '/lib/db.php';
+require_once dirname(__DIR__) . '/lib/auth.php';
 $user = requireLogin();
 
 $projectId = (int) ($_GET['project'] ?? 0);
@@ -112,6 +113,14 @@ foreach ($prompts as $prompt) {
             
             $totalAnswers++;
             
+            // Cost log
+            $costUsd = ($tokensIn * 0.00000015 + $tokensOut * 0.00000060); // OpenRouter typical pricing
+            DB::insert(
+                "INSERT INTO cost_log (project_id, model_id, run_date, tokens_in, tokens_out, cost_usd, source)
+                 VALUES (?, ?, ?, ?, ?, ?, 'openrouter')",
+                [$projectId, $model['id'], $runDate, $tokensIn, $tokensOut, $costUsd]
+            );
+            
             // Mention de la marca (visibilidad variable)
             $mentionChance = 50 + rand(-20, 30); // 30-80% visibilidad
             if (rand(0, 100) < $mentionChance) {
@@ -125,7 +134,14 @@ foreach ($prompts as $prompt) {
                     [$answerId, $projectId, $runDate, $model['id'], $project['brand_name'], $position, $sentiment, $sentimentScore]
                 );
                 $totalMentions++;
-                
+            
+                // Cost del analyzer (DeepSeek)
+                DB::insert(
+                    "INSERT INTO cost_log (project_id, model_id, run_date, tokens_in, tokens_out, cost_usd, source)
+                     VALUES (?, NULL, ?, 400, 150, 0.00008, 'deepseek_analyzer')",
+                    [$projectId, $runDate]
+                );
+            
                 // A veces mencionar también un competidor
                 if (!empty($competitors) && rand(0, 100) < 40) {
                     $comp = $competitors[array_rand($competitors)];

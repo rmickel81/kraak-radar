@@ -1,21 +1,55 @@
-MIT License
+MIT Non-Commercial License with Commercial Option
 
-Copyright (c) 2026 Roberto Mickel Abrante
+Copyright (c) 2026 KraakVC OU. All rights reserved.
+
+Lead Developer: Roberto Mickel Abrante
+
+---
+
+GRANT OF RIGHTS -- NON-COMMERCIAL USE
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+of this software and associated documentation files (the "Software"), to use,
+copy, modify, merge, publish, and distribute the Software for NON-COMMERCIAL
+purposes only, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice, this permission notice, and the attribution to
+KraakVC OU and lead developer Roberto Mickel Abrante shall be included in
+all copies or substantial portions of the Software.
+
+"Non-commercial purposes" includes, but is not limited to:
+  - Educational and academic use
+  - Research and scientific investigation
+  - Personal, non-revenue-generating use
+  - Evaluation and testing prior to commercial licensing
+  - Open source contributions to this project
+
+---
+
+COMMERCIAL USE
+
+Any use of the Software for commercial purposes requires a separate
+commercial license agreement with KraakVC OU.
+
+"Commercial purposes" includes, but is not limited to:
+  - Use within a company, organization, or government entity that
+    generates revenue
+  - Integration into a product or service that is sold, licensed,
+    or offered as a paid service (SaaS)
+  - Use by consultants, agencies, or freelancers to deliver services
+    to paying clients
+  - Any deployment that directly or indirectly generates revenue
+
+To obtain a commercial license, contact KraakVC OU.
+
+---
+
+DISCLAIMER
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.

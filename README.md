@@ -61,4 +61,9 @@ Mide cómo aparece tu marca cuando los usuarios preguntan a los LLMs sobre tu se
 
 ## Licencia
 
-MIT
+Kraak Radar -- Copyright (c) 2026 KraakVC OU
+
+Lead Developer: Roberto Mickel Abrante
+
+Uso no comercial: MIT-like, gratuito para educacion, investigacion y uso personal.
+Uso comercial: requiere licencia separada. Contactar a KraakVC OU.

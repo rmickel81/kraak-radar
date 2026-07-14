@@ -2,306 +2,181 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kraak Radar — Visibilidad de tu marca en IA</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Kraak Radar -- Visibilidad de marca en IA</title>
     <style>
-        :root {
-            --bg: #0d1117;
-            --card: #161b22;
-            --border: #30363d;
-            --text: #c9d1d9;
-            --heading: #f0f6fc;
-            --muted: #8b949e;
-            --accent: #58a6ff;
-            --green: #3fb950;
-            --orange: #d29922;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-        }
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+        :root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--h:#f0f6fc;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+        .container{max-width:960px;margin:0 auto;padding:0 24px}
+        h2{font-size:28px;color:var(--h);margin-bottom:24px}
+        h3{font-size:18px;color:var(--h);margin-bottom:8px}
+        p{color:var(--muted);margin-bottom:8px}
 
-        /* Hero */
-        .hero {
-            padding: 80px 0 60px;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-        }
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #58a6ff, #3fb950);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 16px;
-        }
-        .hero p {
-            font-size: 20px;
-            color: var(--muted);
-            max-width: 700px;
-            margin: 0 auto 8px;
-        }
-        .hero .tagline {
-            font-size: 15px;
-            color: var(--muted);
-            margin-top: 12px;
-        }
-        .hero .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: rgba(88,166,255,0.15);
-            border: 1px solid rgba(88,166,255,0.3);
-            border-radius: 20px;
-            color: var(--accent);
-            font-size: 13px;
-            margin-top: 16px;
-        }
+        .hero{padding:80px 0 60px;text-align:center;border-bottom:1px solid var(--border)}
+        .hero h1{font-size:44px;font-weight:700;background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero .lead{font-size:18px;max-width:640px;margin:12px auto 0}
+        .hero .badge{display:inline-block;margin-top:16px;padding:4px 14px;background:rgba(88,166,255,.12);border:1px solid rgba(88,166,255,.25);border-radius:20px;color:var(--accent);font-size:13px;font-weight:500}
 
-        /* Sections */
-        section { padding: 60px 0; border-bottom: 1px solid var(--border); }
-        section h2 {
-            font-size: 28px;
-            color: var(--heading);
-            margin-bottom: 32px;
-        }
+        section{padding:60px 0;border-bottom:1px solid var(--border)}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+        @media(max-width:768px){.grid{grid-template-columns:1fr}}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px}
+        .card p{font-size:14px}
 
-        /* Features grid */
-        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .features { grid-template-columns: 1fr; } }
-        .feature {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-        }
-        .feature h3 { color: var(--heading); font-size: 16px; margin-bottom: 8px; }
-        .feature p { color: var(--muted); font-size: 14px; }
-        .feature .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+        .steps{counter-reset:step;list-style:none}
+        .steps li{counter-increment:step;padding:16px 0;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start}
+        .steps li::before{content:counter(step);display:flex;align-items:center;justify-content:center;width:28px;height:28px;min-width:28px;background:var(--accent);color:#fff;border-radius:50%;font-size:13px;font-weight:700}
+        .steps li h3{margin-bottom:4px}
+        .steps li p{color:var(--muted);font-size:14px}
 
-        /* Model list */
-        .models {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-        }
-        .model-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 12px 16px;
-            text-align: center;
-        }
-        .model-item .name { color: var(--heading); font-size: 14px; font-weight: 600; }
-        .model-item .family { color: var(--muted); font-size: 11px; text-transform: uppercase; margin-top: 2px; }
-        .model-item.china { border-color: rgba(217,154,34,0.4); }
-        .model-item.china .name::after { content: " [CN]"; font-size: 12px; }
+        .models-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+        .model-chip{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px;text-align:center;font-size:13px}
+        .model-chip.cn{border-color:rgba(210,153,34,.4)}
+        .model-chip strong{display:block;color:var(--h)}
+        .model-chip em{display:block;color:var(--muted);font-style:normal;font-size:11px;text-transform:uppercase;margin-top:2px}
 
-        /* Footer */
-        .footer {
-            padding: 40px 0;
-            text-align: center;
-            color: var(--muted);
-            font-size: 14px;
-        }
-        .footer a { color: var(--accent); text-decoration: none; }
-        .footer a:hover { text-decoration: underline; }
+        .cta{text-align:center;padding:48px 0 20px}
+        .btn{display:inline-block;padding:12px 28px;background:#238636;border:1px solid rgba(240,246,252,.1);border-radius:6px;color:#fff;font-size:15px;font-weight:500;text-decoration:none;transition:background .15s}
+        .btn:hover{background:#2ea043}
+        .btn-ghost{background:transparent;border-color:var(--accent);color:var(--accent);margin-left:12px}
+        .btn-ghost:hover{background:rgba(88,166,255,.1)}
+        .footer{padding:32px 0;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--border)}
+        .footer a{color:var(--accent);text-decoration:none}
+        .footer a:hover{text-decoration:underline}
 
-        .btn {
-            display: inline-block;
-            padding: 12px 28px;
-            background: #238636;
-            border: 1px solid rgba(240,246,252,0.1);
-            border-radius: 6px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 500;
-            text-decoration: none;
-            margin-top: 24px;
-        }
-        .btn:hover { background: #2ea043; }
-        .btn-outline {
-            background: transparent;
-            border-color: var(--accent);
-            color: var(--accent);
-            margin-left: 12px;
-        }
-        .btn-outline:hover { background: rgba(88,166,255,0.1); }
-
-        .cta { text-align: center; padding: 40px 0; }
+        .diagram{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin:24px 0;overflow-x:auto}
+        .diagram pre{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:13px;color:var(--accent);line-height:1.8}
     </style>
 </head>
 <body>
-    <div class="hero">
-        <div class="container">
-            <h1>Kraak Radar</h1>
-            <p>Tracker de visibilidad de marca en asistentes de inteligencia artificial.</p>
-            <p class="tagline">Mide cómo aparece tu marca cuando los LLMs hablan de tu sector. GEO / AEO intelligence.</p>
-            <span class="badge">Código abierto &mdash; MIT</span>
+
+<div class="hero container">
+    <h1>Kraak Radar</h1>
+    <p class="lead">Monitoriza la visibilidad de tu marca en asistentes de inteligencia artificial. Descubre que dicen de ti ChatGPT, Gemini, DeepSeek y otros LLMs cuando la gente pregunta sobre tu sector.</p>
+    <p class="lead muted">GEO / AEO intelligence. Modelos chinos incluidos, multi-idioma real.</p>
+    <span class="badge">Codigo abierto -- MIT License</span>
+</div>
+
+<section class="container">
+    <h2>Que hace Kraak Radar</h2>
+    <div class="grid">
+        <div class="card">
+            <h3>Monitoriza</h3>
+            <p>Cada dia lanzamos preguntas conversacionales reales -- "cual es la mejor plataforma para...?" -- contra cada modelo de IA. Registramos sus respuestas y analizamos cuantas veces mencionan tu marca.</p>
+        </div>
+        <div class="card">
+            <h3>Analiza</h3>
+            <p>Un analyzer con inteligencia artificial extrae de cada respuesta: que marcas se mencionaron, en que orden, con que sentimiento (positivo/negativo/neutro) y que fuentes citaron.</p>
+        </div>
+        <div class="card">
+            <h3>Compara</h3>
+            <p>Benchmark contra tus competidores directos. Share of Voice en el ecosistema IA. Quien te gana en visibilidad, en que modelos, con que tono.</p>
+        </div>
+        <div class="card">
+            <h3>Actua</h3>
+            <p>Con datos reales, no intuiciones. Si tu visibilidad cae, lo sabes. Si un competidor te adelanta, lo ves. Exporta CSV para tus informes. Toma decisiones basadas en evidencia.</p>
         </div>
     </div>
+</section>
 
-    <section>
-        <div class="container">
-            <h2>Qué hace</h2>
-            <div class="features">
-                <div class="feature">
-                    <span class="icon">[ ]</span>
-                    <h3>Visibilidad</h3>
-                    <p>Mide cada cuanto te mencionan los asistentes de IA cuando preguntan sobre tu sector. Porcentaje de visibilidad sobre el total de consultas.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[=]</span>
-                    <h3>Posicion</h3>
-                    <p>En que orden apareces respecto a tus competidores. Ser mencionado es bueno, serlo el primero es mejor.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[+]</span>
-                    <h3>Sentimiento</h3>
-                    <p>Los asistentes hablan bien de ti, mal o neutro? Analisis de sentimiento sobre cada mencion.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[#]</span>
-                    <h3>Fuentes</h3>
-                    <p>Que webs y dominios citan los modelos cuando hablan de tu sector. Saber de donde sacan la informacion.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[x]</span>
-                    <h3>Benchmark</h3>
-                    <p>Compara tu visibilidad con la de tus competidores directos. Share of voice en el ecosistema IA.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[/]</span>
-                    <h3>Evolución</h3>
-                    <p>Seguimiento diario con histórico. Ve cómo cambia tu posicionamiento en el tiempo.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <h2>Modelos trackeados</h2>
-            <p style="color:var(--muted);margin-bottom:24px;">Incluyendo modelos chinos que ningún otro tracker cubre.</p>
-            <div class="models">
-                <div class="model-item"><div class="name">GPT-4o</div><div class="family">OpenAI</div></div>
-                <div class="model-item"><div class="name">Gemini</div><div class="family">Google</div></div>
-                <div class="model-item"><div class="name">Claude</div><div class="family">Anthropic</div></div>
-                <div class="model-item"><div class="name">Perplexity</div><div class="family">Perplexity</div></div>
-                <div class="model-item china"><div class="name">DeepSeek</div><div class="family">DeepSeek</div></div>
-                <div class="model-item china"><div class="name">Qwen</div><div class="family">Alibaba</div></div>
-                <div class="model-item china"><div class="name">Kimi</div><div class="family">Moonshot</div></div>
-                <div class="model-item china"><div class="name">GLM-4</div><div class="family">Zhipu</div></div>
-                <div class="model-item china"><div class="name">MiniMax</div><div class="family">MiniMax</div></div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <h2>Cómo funciona</h2>
-            <div class="features">
-                <div class="feature">
-                    <span class="icon">1️⃣</span>
-                    <h3>Define tu marca y competidores</h3>
-                    <p>Crea un proyecto con tu nombre de marca, dominio y aliases. Añade los competidores que quieras monitorizar.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">2️⃣</span>
-                    <h3>Crea prompts</h3>
-                    <p>Preguntas conversacionales reales que haría un cliente: "¿cuál es la mejor herramienta para...?"</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">3️⃣</span>
-                    <h3>Los modelos responden</h3>
-                    <p>Cada día, cada prompt se lanza contra cada modelo seleccionado. Las respuestas se almacenan crudas.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">4️⃣</span>
-                    <h3>DeepSeek analiza</h3>
-                    <p>Un analyzer con DeepSeek extrae menciones, posición, sentimiento y fuentes de cada respuesta.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">5️⃣</span>
-                    <h3>Dashboard en vivo</h3>
-                    <p>Visualiza la evolución de tu visibilidad, comparativas con competidores y fuentes citadas.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">6️⃣</span>
-                    <h3>Exporta datos</h3>
-                    <p>Descarga CSV con todos los datos para tus informes, presentaciones o análisis externos.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <h2>Diferencial</h2>
-            <div class="features">
-                <div class="feature">
-                    <span class="icon">[CN]</span>
-                    <h3>Modelos chinos</h3>
-                    <p>DeepSeek, Qwen, Kimi, GLM-4, MiniMax. La competencia occidental no trackea estos modelos. Si tu marca opera o compite con China, esto es imprescindible.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[ES]</span>
-                    <h3>Multi-idioma real</h3>
-                    <p>Diseñado desde el origen para español y otros idiomas, no como un añadido tardío.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[<>]</span>
-                    <h3>BYOK</h3>
-                    <p>Bring Your Own Key. Usas tus propias APIs de los modelos. Sin costes ocultos ni suscripciones mensuales fijas.</p>
-                </div>
-                <div class="feature">
-                    <span class="icon">[{}]</span>
-                    <h3>Código abierto</h3>
-                    <p>MIT License. El código es tuyo, lo auditas, lo modificas, lo despliegas donde quieras.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <h2>Stack técnico</h2>
-            <div class="features">
-                <div class="feature">
-                    <h3>PHP 8.3 + MySQL</h3>
-                    <p>Sin frameworks, sin Composer. PDO nativo, prepared statements. Funciona en hosting compartido.</p>
-                </div>
-                <div class="feature">
-                    <h3>OpenRouter API</h3>
-                    <p>Proxy único para todos los modelos. Una API key, 9+ modelos. Gestión centralizada de costes.</p>
-                </div>
-                <div class="feature">
-                    <h3>DeepSeek Analyzer</h3>
-                    <p>El análisis de menciones y sentimiento lo hace DeepSeek v4-flash. Sin Claude, sin Haiku, sin costes elevados.</p>
-                </div>
-                <div class="feature">
-                    <h3>Chart.js + Vanilla JS</h3>
-                    <p>Dashboard con gráficas interactivas. Sin dependencias pesadas. Carga rápida incluso en hosting compartido.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="container">
-        <div class="cta">
-            <a href="https://github.com/rmickel81/kraak-radar" class="btn">Ver en GitHub</a>
-            <a href="https://github.com/rmickel81/kraak-radar/blob/main/LICENSE" class="btn btn-outline">MIT License</a>
-        </div>
+<section class="container">
+    <h2>Como funciona</h2>
+    <div class="diagram">
+        <pre>
+Prompt: "Cual es la mejor herramienta de tracking IA?"
+   |
+   v
+[OpenRouter] --> ChatGPT / Gemini / Claude / Perplexity / DeepSeek / Qwen / Kimi / GLM / MiniMax
+   |
+   v
+Respuestas crudas (almacenadas)
+   |
+   v
+[DeepSeek Analyzer] --> Extrae: menciones, posicion, sentimiento, fuentes
+   |
+   v
+[Daily Snapshot] --> Agregado diario (lo unico que lee el dashboard)
+   |
+   v
+[Dashboard] --> Grafica de evolucion, benchmark competitivo, ranking de fuentes, export CSV</pre>
     </div>
+    <ol class="steps">
+        <li>
+            <div><h3>Define tu proyecto</h3><p>Nombre de tu marca, dominio web, y los competidores contra los que quieres compararte. Indicas en que idioma y pais operas.</p></div>
+        </li>
+        <li>
+            <div><h3>Crea prompts</h3><p>Preguntas conversacionales reales que harian tus clientes potenciales. "Cual es el mejor CRM para pymes?", "Que plataforma de tracking IA recomiendas?". Agrupalos por temas.</p></div>
+        </li>
+        <li>
+            <div><h3>Selecciona modelos</h3><p>9 modelos disponibles. Desde occidentales (ChatGPT, Gemini, Claude, Perplexity) a chinos (DeepSeek, Qwen, Kimi, GLM, MiniMax). Activa los que quieras trackear.</p></div>
+        </li>
+        <li>
+            <div><h3>Configura tus APIs</h3><p>Trae tu propia clave (BYOK). Solo necesitas una cuenta en OpenRouter para los modelos y una en DeepSeek para el analyzer. Sin suscripciones mensuales fijas.</p></div>
+        </li>
+        <li>
+            <div><h3>Activa los crons</h3><p>El sistema ejecuta consultas automaticamente cada dia. El pipeline plan -> run -> analyze -> snapshot se encarga de todo. Los resultados aparecen en minutos.</p></div>
+        </li>
+        <li>
+            <div><h3>Monitoriza el dashboard</h3><p>Visibilidad por modelo, evolucion temporal, posicionamiento frente a competidores, fuentes mas citadas. Exporta CSV para tus informes.</p></div>
+        </li>
+    </ol>
+</section>
 
-    <div class="footer">
-        <div class="container">
-            <p>Kraak Radar &mdash; un proyecto de <a href="https://github.com/rmickel81">Roberto Mickel</a></p>
-            <p style="margin-top:4px;font-size:13px;">Construido con DeepSeek desde cero. Sin Claude, sin OpenAI, sin intermediarios.</p>
-        </div>
+<section class="container">
+    <h2>Modelos trackeados</h2>
+    <p style="margin-bottom:20px">Incluyendo modelos chinos que la competencia ignora. Si tu marca opera o compite con China, necesitas esto.</p>
+    <div class="models-grid">
+        <div class="model-chip"><strong>ChatGPT</strong><em>OpenAI</em></div>
+        <div class="model-chip"><strong>Gemini</strong><em>Google</em></div>
+        <div class="model-chip"><strong>Claude</strong><em>Anthropic</em></div>
+        <div class="model-chip"><strong>Perplexity</strong><em>Perplexity</em></div>
+        <div class="model-chip cn"><strong>DeepSeek</strong><em>DeepSeek</em></div>
+        <div class="model-chip cn"><strong>Qwen</strong><em>Alibaba</em></div>
+        <div class="model-chip cn"><strong>Kimi</strong><em>Moonshot</em></div>
+        <div class="model-chip cn"><strong>GLM-4</strong><em>Zhipu</em></div>
+        <div class="model-chip cn"><strong>MiniMax</strong><em>MiniMax</em></div>
     </div>
+</section>
+
+<section class="container">
+    <h2>Para quien es</h2>
+    <div class="grid">
+        <div class="card"><h3>Agencias de marketing</h3><p>Monitoriza la visibilidad de tus clientes en IA. Informes automatizados, benchmarks, metricas profesionales. Demuestra ROI real.</p></div>
+        <div class="card"><h3>Empresas SaaS</h3><p>Sabes si los asistentes de IA te recomiendan? Si tu competidor aparece antes que tu? Con datos, no con intuiciones.</p></div>
+        <div class="card"><h3>Consultores SEO</h3><p>El SEO tradicional migra hacia GEO. Los LLMs son el nuevo buscador. Ofrece a tus clientes el servicio que les falta.</p></div>
+        <div class="card"><h3>Empresas con presencia internacional</h3><p>Si operas en Asia o LATAM, necesitas saber que dicen los modelos chinos, no solo los occidentales. Cobertura multi-idioma real.</p></div>
+    </div>
+</section>
+
+<section class="container">
+    <h2>Stack tecnico</h2>
+    <div class="grid">
+        <div class="card"><h3>PHP 8.3 + MySQL</h3><p>Sin frameworks, sin Composer. PDO nativo. Funciona en hosting compartido. Disenado para ser ligero y rapido.</p></div>
+        <div class="card"><h3>OpenRouter API</h3><p>Un solo endpoint para todos los modelos. Gestion centralizada de costes. BYOK (Bring Your Own Key).</p></div>
+        <div class="card"><h3>DeepSeek Analyzer</h3><p>Parseo de respuestas sin depender de Claude ni OpenAI. Coste por analisis: fracciones de centimo.</p></div>
+        <div class="card"><h3>Chart.js + Vanilla JS</h3><p>Dashboard interactivo con graficas. Sin React, sin Vue, sin dependencias pesadas.</p></div>
+    </div>
+</section>
+
+<section class="container">
+    <h2>Diferencial frente a Peec / Profound</h2>
+    <div class="grid">
+        <div class="card"><h3>Modelos chinos incluidos</h3><p>DeepSeek, Qwen, Kimi, GLM-4, MiniMax. La competencia occidental no los trackea. Son el 40% del trafico mundial de LLMs.</p></div>
+        <div class="card"><h3>Multi-idioma nativo</h3><p>Espanol, ingles y cualquier idioma que quieras configurar. Disenado desde cero para multi-idioma, no anadido despues.</p></div>
+        <div class="card"><h3>BYOK -- pagas solo lo que usas</h3><p>Sin suscripcion mensual fija. Con tus propias APIs de OpenRouter y DeepSeek. Coste tipico: menos de $5/mes para seguimiento diario.</p></div>
+        <div class="card"><h3>Codigo abierto</h3><p>MIT. Lo instalas en tu servidor, lo auditas, lo modificas. Sin vendor lock-in. Sin limites artificiales de prompts o proyectos.</p></div>
+    </div>
+</section>
+
+<div class="container cta">
+    <a href="https://github.com/rmickel81/kraak-radar" class="btn">Ver en GitHub</a>
+    <a href="https://github.com/rmickel81/kraak-radar/fork" class="btn btn-ghost">Hacer fork</a>
+</div>
+
+<div class="footer">
+    <p>Kraak Radar -- un proyecto de <a href="https://github.com/rmickel81">Roberto Mickel</a> | Construido con DeepSeek | MIT License</p>
+</div>
+
 </body>
 </html>

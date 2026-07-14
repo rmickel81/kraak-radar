@@ -73,11 +73,59 @@ if ($project) {
             <p class="page-desc">Visibilidad de tu marca en asistentes de IA.</p>
         </div>
         <?php if (!$project): ?>
-            <div class="empty-state">
-                <h2>Bienvenido a Kraak Radar</h2>
-                <p>Crea un proyecto para empezar a trackear tu marca en asistentes de IA.</p>
-                <p>Necesitas configurar prompts y modelos activos para que el sistema comience a recolectar datos.</p>
-                <p class="note">Los crons ejecutan consultas cada 5 minutos. Los primeros datos aparecerán en minutos.</p>
+            <div class="onboarding">
+                <div class="onboard-hero">
+                    <h2>Bienvenido a Kraak Radar</h2>
+                    <p class="onboard-lead">Monitoriza la visibilidad de tu marca en asistentes de IA. Descubre que dicen de ti ChatGPT, Gemini, DeepSeek y otros LLMs cuando la gente pregunta sobre tu sector.</p>
+                </div>
+                
+                <div class="onboard-steps">
+                    <div class="onboard-step">
+                        <div class="on-step-num">1</div>
+                        <div class="on-step-body">
+                            <h4>Crea un proyecto</h4>
+                            <p>Define el nombre de tu marca, tu dominio web, el idioma y el pais en el que operas.</p>
+                            <form method="post" action="project_create.php" class="onboard-form">
+                                <?= csrfField() ?>
+                                <input type="text" name="name" placeholder="Nombre del proyecto" required>
+                                <input type="text" name="brand_name" placeholder="Nombre de tu marca" required>
+                                <input type="text" name="brand_domain" placeholder="Dominio (ej: kraak.app)">
+                                <button type="submit" class="btn-primary">Crear proyecto</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="onboard-divider"></div>
+                    
+                    <div class="onboard-step">
+                        <div class="on-step-num">2</div>
+                        <div class="on-step-body">
+                            <h4>Configura prompts</h4>
+                            <p>Define las preguntas conversacionales que se lanzaran contra los modelos cada dia. Ejemplos: "cual es la mejor plataforma de tracking IA?", "que herramienta recomiendas para monitorizar marca en LLMs?".</p>
+                        </div>
+                    </div>
+                    
+                    <div class="onboard-divider"></div>
+                    
+                    <div class="onboard-step">
+                        <div class="on-step-num">3</div>
+                        <div class="on-step-body">
+                            <h4>Activa modelos y APIs</h4>
+                            <p>Selecciona los modelos que quieres trackear en Prompts > Modelos Activos. Luego configura tus claves de API en la seccion APIs.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="onboard-divider"></div>
+                    
+                    <div class="onboard-step">
+                        <div class="on-step-num">4</div>
+                        <div class="on-step-body">
+                            <h4>Ejecuta los crons</h4>
+                            <p>Los crons lanzan preguntas contra cada modelo, analizan las respuestas y agregan los resultados automaticamente. Configuralos en tu servidor y los datos empezaran a aparecer en minutos.</p>
+                            <p class="note">Si estas en modo pruebas, usa el boton "Generar datos de prueba" despues de crear el proyecto para ver el dashboard con datos simulados.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
 

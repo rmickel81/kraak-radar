@@ -446,3 +446,19 @@ button:hover, .btn-primary:hover { background: #2ea043; }
 
 /* Chart canvas */
 .card canvas { max-height: 280px; width: 100% !important; }
+
+/* Onboarding */
+.onboarding { max-width: 700px; margin: 0 auto; }
+.onboard-hero { text-align: center; margin-bottom: 40px; }
+.onboard-hero h2 { font-size: 26px; color: var(--text-heading); margin-bottom: 12px; }
+.onboard-lead { color: var(--text-muted); font-size: 15px; max-width: 560px; margin: 0 auto; line-height: 1.6; }
+.onboard-steps { display: flex; flex-direction: column; gap: 0; }
+.onboard-step { display: flex; gap: 20px; align-items: flex-start; }
+.on-step-num { width: 36px; height: 36px; min-width: 36px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; margin-top: 4px; }
+.on-step-body { flex: 1; }
+.on-step-body h4 { font-size: 16px; color: var(--text-heading); margin-bottom: 6px; }
+.on-step-body p { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; line-height: 1.6; }
+.onboard-divider { width: 2px; height: 24px; background: var(--border); margin: 4px 0 4px 17px; }
+.onboard-form { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
+.onboard-form input { padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; min-width: 140px; }
+.onboard-form input:focus { outline: none; border-color: var(--accent); }

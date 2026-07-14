@@ -13,6 +13,9 @@ CREATE TABLE users (
   plan          ENUM('free','starter','pro','agency') NOT NULL DEFAULT 'free',
   prompt_quota  SMALLINT UNSIGNED NOT NULL DEFAULT 5,
   openrouter_key VARCHAR(255) NULL,
+  deepseek_key   VARCHAR(255) NULL,
+  last_login_at  DATETIME NULL,
+  is_admin       TINYINT(1) NOT NULL DEFAULT 0,
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -173,3 +176,24 @@ INSERT INTO models (slug, display_name, family, has_web_search, is_active, sort_
 ('kimi/kimi-chat',           'Kimi Chat',               'moonshot',    0, 1, 70),
 ('glm/glm-4',                'GLM-4 (Zhipu)',           'glm',         0, 1, 80),
 ('minimax/minimax-chat',     'MiniMax Chat',            'minimax',     0, 1, 90);
+
+-- Registro de costes
+CREATE TABLE cost_log (
+  id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  project_id  INT UNSIGNED NOT NULL,
+  model_id    SMALLINT UNSIGNED NULL,
+  run_date    DATE NOT NULL,
+  tokens_in   INT UNSIGNED NOT NULL DEFAULT 0,
+  tokens_out  INT UNSIGNED NOT NULL DEFAULT 0,
+  cost_usd    DECIMAL(10,6) NOT NULL DEFAULT 0,
+  source      ENUM('openrouter','deepseek_analyzer') NOT NULL DEFAULT 'openrouter',
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_proj_date (project_id, run_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Configuracion del sistema
+CREATE TABLE settings (
+  `key`   VARCHAR(80) PRIMARY KEY,
+  `value` TEXT NULL,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

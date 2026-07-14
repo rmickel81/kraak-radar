@@ -1,0 +1,62 @@
+<?php
+/**
+ * PDO Singleton con helpers
+ */
+class DB {
+    private static ?PDO $instance = null;
+
+    public static function get(): PDO {
+        if (self::$instance === null) {
+            $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', DB_HOST, DB_NAME, DB_CHARSET);
+            self::$instance = new PDO($dsn, DB_USER, DB_PASS, [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+            ]);
+        }
+        return self::$instance;
+    }
+
+    public static function fetchAll(string $sql, array $params = []): array {
+        $stmt = self::get()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    public static function fetchOne(string $sql, array $params = []): ?array {
+        $stmt = self::get()->prepare($sql);
+        $stmt->execute($params);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
+    public static function execute(string $sql, array $params = []): int {
+        $stmt = self::get()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->rowCount();
+    }
+
+    public static function insert(string $sql, array $params = []): int {
+        $stmt = self::get()->prepare($sql);
+        $stmt->execute($params);
+        return (int) self::get()->lastInsertId();
+    }
+}
+
+/**
+ * Helper: requiere login
+ */
+function requireLogin(): array {
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: index.php');
+        exit;
+    }
+    $user = DB::fetchOne('SELECT * FROM users WHERE id = ?', [$_SESSION['user_id']]);
+    if (!$user) {
+        session_destroy();
+        header('Location: index.php');
+        exit;
+    }
+    return $user;
+}

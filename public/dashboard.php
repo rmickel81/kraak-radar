@@ -90,6 +90,7 @@ if ($project) {
             <div class="dash-header">
                 <h2><?= htmlspecialchars($project['name']) ?></h2>
                 <div class="controls">
+                    <a href="seed.php?project=<?= $projectId ?>" class="btn-seed" onclick="return confirm('¿Generar datos de prueba para los últimos 14 días?')">Generar datos de prueba</a>
                     <select onchange="location='?project=<?= $projectId ?>&days='+this.value">
                         <option value="7"  <?= $days==7 ?'selected':''?>>7 días</option>
                         <option value="30" <?= $days==30?'selected':''?>>30 días</option>

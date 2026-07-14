@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kraak Radar — Visibilidad de tu marca en IA</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --heading: #f0f6fc;
+            --muted: #8b949e;
+            --accent: #58a6ff;
+            --green: #3fb950;
+            --orange: #d29922;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+        /* Hero */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #58a6ff, #3fb950);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        .hero p {
+            font-size: 20px;
+            color: var(--muted);
+            max-width: 700px;
+            margin: 0 auto 8px;
+        }
+        .hero .tagline {
+            font-size: 15px;
+            color: var(--muted);
+            margin-top: 12px;
+        }
+        .hero .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(88,166,255,0.15);
+            border: 1px solid rgba(88,166,255,0.3);
+            border-radius: 20px;
+            color: var(--accent);
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        /* Sections */
+        section { padding: 60px 0; border-bottom: 1px solid var(--border); }
+        section h2 {
+            font-size: 28px;
+            color: var(--heading);
+            margin-bottom: 32px;
+        }
+
+        /* Features grid */
+        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .features { grid-template-columns: 1fr; } }
+        .feature {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+        .feature h3 { color: var(--heading); font-size: 16px; margin-bottom: 8px; }
+        .feature p { color: var(--muted); font-size: 14px; }
+        .feature .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+
+        /* Model list */
+        .models {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        .model-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        .model-item .name { color: var(--heading); font-size: 14px; font-weight: 600; }
+        .model-item .family { color: var(--muted); font-size: 11px; text-transform: uppercase; margin-top: 2px; }
+        .model-item.china { border-color: rgba(217,154,34,0.4); }
+        .model-item.china .name::after { content: " 🇨🇳"; font-size: 12px; }
+
+        /* Footer */
+        .footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #238636;
+            border: 1px solid rgba(240,246,252,0.1);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            margin-top: 24px;
+        }
+        .btn:hover { background: #2ea043; }
+        .btn-outline {
+            background: transparent;
+            border-color: var(--accent);
+            color: var(--accent);
+            margin-left: 12px;
+        }
+        .btn-outline:hover { background: rgba(88,166,255,0.1); }
+
+        .cta { text-align: center; padding: 40px 0; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>Kraak Radar</h1>
+            <p>Tracker de visibilidad de marca en asistentes de inteligencia artificial.</p>
+            <p class="tagline">Mide cómo aparece tu marca cuando los LLMs hablan de tu sector. GEO / AEO intelligence.</p>
+            <span class="badge">Código abierto &mdash; MIT</span>
+        </div>
+    </div>
+
+    <section>
+        <div class="container">
+            <h2>Qué hace</h2>
+            <div class="features">
+                <div class="feature">
+                    <span class="icon">📡</span>
+                    <h3>Visibilidad</h3>
+                    <p>Mide cada cuánto te mencionan los asistentes de IA cuando preguntan sobre tu sector. Porcentaje de visibilidad sobre el total de consultas.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">📊</span>
+                    <h3>Posición</h3>
+                    <p>En qué orden apareces respecto a tus competidores. Ser mencionado es bueno, serlo el primero es mejor.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">💬</span>
+                    <h3>Sentimiento</h3>
+                    <p>Los asistentes hablan bien de ti, mal o neutro? Análisis de sentimiento sobre cada mención.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">🔗</span>
+                    <h3>Fuentes</h3>
+                    <p>Qué webs y dominios citan los modelos cuando hablan de tu sector. Saber de dónde sacan la información.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">⚔️</span>
+                    <h3>Benchmark</h3>
+                    <p>Compara tu visibilidad con la de tus competidores directos. Share of voice en el ecosistema IA.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">📈</span>
+                    <h3>Evolución</h3>
+                    <p>Seguimiento diario con histórico. Ve cómo cambia tu posicionamiento en el tiempo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>Modelos trackeados</h2>
+            <p style="color:var(--muted);margin-bottom:24px;">Incluyendo modelos chinos que ningún otro tracker cubre.</p>
+            <div class="models">
+                <div class="model-item"><div class="name">GPT-4o</div><div class="family">OpenAI</div></div>
+                <div class="model-item"><div class="name">Gemini</div><div class="family">Google</div></div>
+                <div class="model-item"><div class="name">Claude</div><div class="family">Anthropic</div></div>
+                <div class="model-item"><div class="name">Perplexity</div><div class="family">Perplexity</div></div>
+                <div class="model-item china"><div class="name">DeepSeek</div><div class="family">DeepSeek</div></div>
+                <div class="model-item china"><div class="name">Qwen</div><div class="family">Alibaba</div></div>
+                <div class="model-item china"><div class="name">Kimi</div><div class="family">Moonshot</div></div>
+                <div class="model-item china"><div class="name">GLM-4</div><div class="family">Zhipu</div></div>
+                <div class="model-item china"><div class="name">MiniMax</div><div class="family">MiniMax</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>Cómo funciona</h2>
+            <div class="features">
+                <div class="feature">
+                    <span class="icon">1️⃣</span>
+                    <h3>Define tu marca y competidores</h3>
+                    <p>Crea un proyecto con tu nombre de marca, dominio y aliases. Añade los competidores que quieras monitorizar.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">2️⃣</span>
+                    <h3>Crea prompts</h3>
+                    <p>Preguntas conversacionales reales que haría un cliente: "¿cuál es la mejor herramienta para...?"</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">3️⃣</span>
+                    <h3>Los modelos responden</h3>
+                    <p>Cada día, cada prompt se lanza contra cada modelo seleccionado. Las respuestas se almacenan crudas.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">4️⃣</span>
+                    <h3>DeepSeek analiza</h3>
+                    <p>Un analyzer con DeepSeek extrae menciones, posición, sentimiento y fuentes de cada respuesta.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">5️⃣</span>
+                    <h3>Dashboard en vivo</h3>
+                    <p>Visualiza la evolución de tu visibilidad, comparativas con competidores y fuentes citadas.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">6️⃣</span>
+                    <h3>Exporta datos</h3>
+                    <p>Descarga CSV con todos los datos para tus informes, presentaciones o análisis externos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>Diferencial</h2>
+            <div class="features">
+                <div class="feature">
+                    <span class="icon">🇨🇳</span>
+                    <h3>Modelos chinos</h3>
+                    <p>DeepSeek, Qwen, Kimi, GLM-4, MiniMax. La competencia occidental no trackea estos modelos. Si tu marca opera o compite con China, esto es imprescindible.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">🇪🇸</span>
+                    <h3>Multi-idioma real</h3>
+                    <p>Diseñado desde el origen para español y otros idiomas, no como un añadido tardío.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">🔑</span>
+                    <h3>BYOK</h3>
+                    <p>Bring Your Own Key. Usas tus propias APIs de los modelos. Sin costes ocultos ni suscripciones mensuales fijas.</p>
+                </div>
+                <div class="feature">
+                    <span class="icon">📂</span>
+                    <h3>Código abierto</h3>
+                    <p>MIT License. El código es tuyo, lo auditas, lo modificas, lo despliegas donde quieras.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>Stack técnico</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>PHP 8.3 + MySQL</h3>
+                    <p>Sin frameworks, sin Composer. PDO nativo, prepared statements. Funciona en hosting compartido.</p>
+                </div>
+                <div class="feature">
+                    <h3>OpenRouter API</h3>
+                    <p>Proxy único para todos los modelos. Una API key, 9+ modelos. Gestión centralizada de costes.</p>
+                </div>
+                <div class="feature">
+                    <h3>DeepSeek Analyzer</h3>
+                    <p>El análisis de menciones y sentimiento lo hace DeepSeek v4-flash. Sin Claude, sin Haiku, sin costes elevados.</p>
+                </div>
+                <div class="feature">
+                    <h3>Chart.js + Vanilla JS</h3>
+                    <p>Dashboard con gráficas interactivas. Sin dependencias pesadas. Carga rápida incluso en hosting compartido.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="cta">
+            <a href="https://github.com/rmickel81/kraak-radar" class="btn">Ver en GitHub</a>
+            <a href="https://github.com/rmickel81/kraak-radar/blob/main/LICENSE" class="btn btn-outline">MIT License</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>Kraak Radar &mdash; un proyecto de <a href="https://github.com/rmickel81">Roberto Mickel</a></p>
+            <p style="margin-top:4px;font-size:13px;">Construido con DeepSeek desde cero. Sin Claude, sin OpenAI, sin intermediarios.</p>
+        </div>
+    </div>
+</body>
+</html>

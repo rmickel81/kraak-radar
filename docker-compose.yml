@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: kraak-db
+    environment:
+      MYSQL_ROOT_PASSWORD: kraak_test_2026
+      MYSQL_DATABASE: kraak_radar
+      MYSQL_USER: kraak
+      MYSQL_PASSWORD: kraak_test_2026
+    volumes:
+      - kraak_mysql:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - "3307:3306"
+    restart: unless-stopped
+
+  web:
+    image: php:8.3-apache
+    container_name: kraak-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/var/www/html
+      - ./config:/var/www/config
+      - ./lib:/var/www/lib
+      - ./cron:/var/www/cron
+      - ./apache-config.conf:/etc/apache2/sites-available/000-default.conf
+    environment:
+      DB_HOST: db
+      DB_NAME: kraak_radar
+      DB_USER: kraak
+      DB_PASS: kraak_test_2026
+    depends_on:
+      - db
+    restart: unless-stopped
+    command: >
+      bash -c "docker-php-ext-install pdo pdo_mysql &&
+               a2enmod rewrite &&
+               echo 'ServerName localhost' >> /etc/apache2/apache2.conf &&
+               apache2-foreground"
+
+volumes:
+  kraak_mysql:

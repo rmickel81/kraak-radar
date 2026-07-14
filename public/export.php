@@ -66,19 +66,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $project && isset($_POST['export'])
 <html lang="es">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Exportar</title><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
-<nav class="nav"><div class="nav-inner">
-    <a href="dashboard.php" class="nav-brand">Kraak Radar</a>
-    <div class="nav-links">
-        <a href="dashboard.php">Dashboard</a><a href="prompts.php">Prompts</a><a href="competitors.php">Competidores</a>
-        <a href="sources.php">Fuentes</a><a href="export.php" class="active">Exportar</a>
-        <a href="logout.php" class="btn-logout">Salir</a>
-    </div>
-</div></nav>
-<main class="main">
+<div class="app-layout">
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
+    <main class="app-main">
+        <div class="page-header">
+            <h1>Exportar datos</h1>
+            <p class="page-desc">Descarga los datos de visibilidad en formato CSV para tus informes, presentaciones o analisis externos.</p>
+        </div>
     <div class="card" style="max-width:500px;margin:40px auto;">
         <h2>Exportar datos</h2>
         <?php if ($project): ?>
         <form method="post">
+            <?= csrfField() ?>
             <div class="form-group">
                 <label>Proyecto: <strong><?=htmlspecialchars($project['name'])?></strong></label>
             </div>
@@ -103,5 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $project && isset($_POST['export'])
         <?php else: ?><p class="note">Selecciona un proyecto para exportar sus datos.</p><?php endif; ?>
     </div>
 </main>
+</div>
 </body>
 </html>

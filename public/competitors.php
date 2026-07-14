@@ -46,6 +46,7 @@ $competitors = $project ? DB::fetchAll('SELECT * FROM competitors WHERE project_
     <div class="card">
         <h3>Añadir Competidor</h3>
         <form method="post" class="form-inline">
+            <?= csrfField() ?>
             <input type="text" name="name" placeholder="Nombre de la marca" required>
             <input type="text" name="domain" placeholder="Dominio (opcional)">
             <input type="text" name="aliases" placeholder="Alias separados por coma (opcional)">

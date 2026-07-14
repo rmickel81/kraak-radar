@@ -42,21 +42,3 @@ class DB {
         return (int) self::get()->lastInsertId();
     }
 }
-
-/**
- * Helper: requiere login
- */
-function requireLogin(): array {
-    session_start();
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: index.php');
-        exit;
-    }
-    $user = DB::fetchOne('SELECT * FROM users WHERE id = ?', [$_SESSION['user_id']]);
-    if (!$user) {
-        session_destroy();
-        header('Location: index.php');
-        exit;
-    }
-    return $user;
-}

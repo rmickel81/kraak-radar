@@ -4,14 +4,15 @@
  */
 require_once dirname(__DIR__) . '/config/config.php';
 require_once dirname(__DIR__) . '/lib/db.php';
+require_once dirname(__DIR__) . '/lib/auth.php';
 $user = requireLogin();
 
 $projects = DB::fetchAll('SELECT * FROM projects WHERE user_id = ? ORDER BY name', [$user['id']]);
 $projectId = (int) ($_GET['project'] ?? ($projects[0]['id'] ?? 0));
 $project = DB::fetchOne('SELECT * FROM projects WHERE id = ? AND user_id = ?', [$projectId, $user['id']]);
 
-// CRUD
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $project) {
+    csrfVerify();
     if (isset($_POST['add'])) {
         $text = trim($_POST['text'] ?? '');
         $topicId = (int) ($_POST['topic_id'] ?? 0);
@@ -44,18 +45,13 @@ $pmIds = array_column($projectModels, 'model_id');
 <html lang="es">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Prompts</title><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
-<nav class="nav"><div class="nav-inner">
-    <a href="dashboard.php" class="nav-brand">Kraak Radar</a>
-    <div class="nav-links">
-        <a href="dashboard.php">Dashboard</a>
-        <a href="prompts.php" class="active">Prompts</a>
-        <a href="competitors.php">Competidores</a>
-        <a href="sources.php">Fuentes</a>
-        <a href="export.php">Exportar</a>
-        <a href="logout.php" class="btn-logout">Salir</a>
-    </div>
-</div></nav>
-<main class="main">
+<div class="app-layout">
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
+    <main class="app-main">
+        <div class="page-header">
+            <h1>Prompts</h1>
+            <p class="page-desc">Preguntas conversacionales que se lanzan contra los modelos cada día.</p>
+        </div>
     <div class="dash-header">
         <h2>Prompts</h2>
         <select onchange="location='?project='+this.value">
@@ -70,6 +66,7 @@ $pmIds = array_column($projectModels, 'model_id');
         <div class="card">
             <h3>Añadir Prompt</h3>
             <form method="post" class="form-inline">
+                <?= csrfField() ?>
                 <select name="topic_id"><option value="">Sin tema</option><?php foreach ($topics as $t): ?><option value="<?=$t['id']?>"><?=htmlspecialchars($t['name'])?></option><?php endforeach; ?></select>
                 <input type="text" name="text" placeholder='Ej: "¿Cuál es el mejor CRM para pymes?"' required>
                 <button type="submit" name="add">Añadir</button>
@@ -114,8 +111,8 @@ $pmIds = array_column($projectModels, 'model_id');
                     <td><?= htmlspecialchars($p['text']) ?></td>
                     <td><?= $p['is_active'] ? 'Activo' : 'Inactivo' ?></td>
                     <td class="actions">
-                        <form method="post" style="display:inline"><input type="hidden" name="id" value="<?=$p['id']?>"><button type="submit" name="toggle" class="btn-sm"><?=$p['is_active']?'Pausar':'Activar'?></button></form>
-                        <form method="post" style="display:inline" onsubmit="return confirm('¿Eliminar?')"><input type="hidden" name="id" value="<?=$p['id']?>"><button type="submit" name="delete" class="btn-sm btn-danger">Eliminar</button></form>
+                        <form method="post" style="display:inline"><?= csrfField() ?><input type="hidden" name="id" value="<?=$p['id']?>"><button type="submit" name="toggle" class="btn-sm"><?=$p['is_active']?'Pausar':'Activar'?></button></form>
+                        <form method="post" style="display:inline" onsubmit="return confirm('¿Eliminar?')"><?= csrfField() ?><input type="hidden" name="id" value="<?=$p['id']?>"><button type="submit" name="delete" class="btn-sm btn-danger">Eliminar</button></form>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -125,5 +122,6 @@ $pmIds = array_column($projectModels, 'model_id');
     </div>
     <?php endif; ?>
 </main>
+</div>
 </body>
 </html>

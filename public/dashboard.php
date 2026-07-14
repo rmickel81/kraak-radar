@@ -4,6 +4,7 @@
  */
 require_once dirname(__DIR__) . '/config/config.php';
 require_once dirname(__DIR__) . '/lib/db.php';
+require_once dirname(__DIR__) . '/lib/auth.php';
 $user = requireLogin();
 
 // Proyectos del usuario
@@ -64,21 +65,13 @@ if ($project) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="dashboard.php" class="nav-brand">Kraak Radar</a>
-            <div class="nav-links">
-                <a href="prompts.php">Prompts</a>
-                <a href="competitors.php">Competidores</a>
-                <a href="sources.php">Fuentes</a>
-                <a href="export.php">Exportar</a>
-                <span class="user-name"><?= htmlspecialchars($user['name']) ?></span>
-                <a href="logout.php" class="btn-logout">Salir</a>
-            </div>
+<div class="app-layout">
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
+    <main class="app-main">
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <p class="page-desc">Visibilidad de tu marca en asistentes de IA.</p>
         </div>
-    </nav>
-
-    <main class="main">
         <?php if (!$project): ?>
             <div class="empty-state">
                 <h2>Bienvenido a Kraak Radar</h2>
@@ -195,5 +188,7 @@ if ($project) {
     });
     <?php endif; ?>
     </script>
+</main>
+</div>
 </body>
 </html>

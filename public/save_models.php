@@ -9,7 +9,8 @@ $user = requireLogin();
 $projectId = (int) ($_POST['project_id'] ?? 0);
 $project = DB::fetchOne('SELECT * FROM projects WHERE id = ? AND user_id = ?', [$projectId, $user['id']]);
 
-if ($project && isset($_POST['save_models'])) {
+if ($project if ($project && isset($_POST['save_models'])) {if ($project && isset($_POST['save_models'])) { isset($_POST["save_models"])) {
+    csrfVerify();
     $models = array_map('intval', $_POST['models'] ?? []);
     DB::execute('DELETE FROM project_models WHERE project_id = ?', [$projectId]);
     foreach ($models as $mId) {

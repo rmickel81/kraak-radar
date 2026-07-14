@@ -4,6 +4,7 @@
  */
 require_once dirname(__DIR__) . '/config/config.php';
 require_once dirname(__DIR__) . '/lib/db.php';
+require_once dirname(__DIR__) . '/lib/auth.php';
 $user = requireLogin();
 
 $projects = DB::fetchAll('SELECT * FROM projects WHERE user_id = ? ORDER BY name', [$user['id']]);
@@ -11,6 +12,7 @@ $projectId = (int) ($_GET['project'] ?? ($projects[0]['id'] ?? 0));
 $project = DB::fetchOne('SELECT * FROM projects WHERE id = ? AND user_id = ?', [$projectId, $user['id']]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $project) {
+    csrfVerify();
     if (isset($_POST['add'])) {
         $name = trim($_POST['name'] ?? '');
         $domain = trim($_POST['domain'] ?? '');

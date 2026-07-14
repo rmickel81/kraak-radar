@@ -3,20 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Kraak Radar -- Visibilidad de marca en IA</title>
+    <title>Kraak Radar -- Visibilidad de marca en IA | KraakVC</title>
     <style>
         :root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--h:#f0f6fc;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
         .container{max-width:960px;margin:0 auto;padding:0 24px}
-        h2{font-size:28px;color:var(--h);margin-bottom:24px}
-        h3{font-size:18px;color:var(--h);margin-bottom:8px}
+        h2{font-size:26px;color:var(--h);margin-bottom:24px}
+        h3{font-size:17px;color:var(--h);margin-bottom:8px}
         p{color:var(--muted);margin-bottom:8px}
 
-        .hero{padding:80px 0 60px;text-align:center;border-bottom:1px solid var(--border)}
-        .hero h1{font-size:44px;font-weight:700;background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .hero .lead{font-size:18px;max-width:640px;margin:12px auto 0}
-        .hero .badge{display:inline-block;margin-top:16px;padding:4px 14px;background:rgba(88,166,255,.12);border:1px solid rgba(88,166,255,.25);border-radius:20px;color:var(--accent);font-size:13px;font-weight:500}
+        .hero{padding:50px 0;text-align:center;border-bottom:1px solid var(--border)}
+        .hero-logo{margin-bottom:20px}
+        .hero-logo img{height:32px}
+        .hero h1{font-size:40px;font-weight:700;color:var(--h);margin-bottom:8px}
+        .hero .accent{color:var(--accent)}
+        .hero .lead{font-size:17px;max-width:600px;margin:12px auto 0}
+
+        .about-creator{display:flex;align-items:center;gap:20px;max-width:700px;margin:30px auto;padding:20px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px}
+        .about-creator img{width:72px;height:72px;border-radius:50%;border:2px solid var(--accent)}
+        .about-details h4{font-size:16px;color:var(--h)}
+        .about-details p{font-size:13px;margin-top:4px}
+        .about-details .role{color:var(--accent);font-weight:600;font-size:13px}
 
         section{padding:60px 0;border-bottom:1px solid var(--border)}
         .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -27,14 +35,16 @@
         .steps{counter-reset:step;list-style:none}
         .steps li{counter-increment:step;padding:16px 0;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start}
         .steps li::before{content:counter(step);display:flex;align-items:center;justify-content:center;width:28px;height:28px;min-width:28px;background:var(--accent);color:#fff;border-radius:50%;font-size:13px;font-weight:700}
-        .steps li h3{margin-bottom:4px}
-        .steps li p{color:var(--muted);font-size:14px}
+        .steps li p{font-size:14px}
 
         .models-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
         .model-chip{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px;text-align:center;font-size:13px}
         .model-chip.cn{border-color:rgba(210,153,34,.4)}
         .model-chip strong{display:block;color:var(--h)}
         .model-chip em{display:block;color:var(--muted);font-style:normal;font-size:11px;text-transform:uppercase;margin-top:2px}
+
+        .diagram{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin:24px 0;overflow-x:auto}
+        .diagram pre{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:13px;color:var(--accent);line-height:1.8}
 
         .cta{text-align:center;padding:48px 0 20px}
         .btn{display:inline-block;padding:12px 28px;background:#238636;border:1px solid rgba(240,246,252,.1);border-radius:6px;color:#fff;font-size:15px;font-weight:500;text-decoration:none;transition:background .15s}
@@ -44,39 +54,37 @@
         .footer{padding:32px 0;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--border)}
         .footer a{color:var(--accent);text-decoration:none}
         .footer a:hover{text-decoration:underline}
+        .footer-logo{height:20px;margin-bottom:8px;opacity:.6}
 
-        .diagram{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin:24px 0;overflow-x:auto}
-        .diagram pre{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:13px;color:var(--accent);line-height:1.8}
+        .feature-icon{font-size:20px;margin-bottom:8px;display:block;color:var(--accent)}
     </style>
 </head>
 <body>
 
 <div class="hero container">
-    <h1>Kraak Radar</h1>
+    <div class="hero-logo">
+        <img src="assets/img/kraak-logo.png" alt="Kraak">
+    </div>
+    <h1>Kraak <span class="accent">Radar</span></h1>
     <p class="lead">Monitoriza la visibilidad de tu marca en asistentes de inteligencia artificial. Descubre que dicen de ti ChatGPT, Gemini, DeepSeek y otros LLMs cuando la gente pregunta sobre tu sector.</p>
-    <p class="lead muted">GEO / AEO intelligence. Modelos chinos incluidos, multi-idioma real.</p>
-    <span class="badge">KraakVC OU -- Non-Commercial License</span>
+    
+    <div class="about-creator">
+        <img src="assets/img/roberto.jpg" alt="Roberto Mickel">
+        <div class="about-details">
+            <h4>Roberto Mickel Abrante</h4>
+            <p class="role">Lead Developer -- KraakVC OU</p>
+            <p>Senior Programmer, China AI specialist, scout de futbol profesional. Construido integramente con DeepSeek y OpenRouter. Codigo 100% propio, sin dependencias externas.</p>
+        </div>
+    </div>
 </div>
 
 <section class="container">
     <h2>Que hace Kraak Radar</h2>
     <div class="grid">
-        <div class="card">
-            <h3>Monitoriza</h3>
-            <p>Cada dia lanzamos preguntas conversacionales reales -- "cual es la mejor plataforma para...?" -- contra cada modelo de IA. Registramos sus respuestas y analizamos cuantas veces mencionan tu marca.</p>
-        </div>
-        <div class="card">
-            <h3>Analiza</h3>
-            <p>Un analyzer con inteligencia artificial extrae de cada respuesta: que marcas se mencionaron, en que orden, con que sentimiento (positivo/negativo/neutro) y que fuentes citaron.</p>
-        </div>
-        <div class="card">
-            <h3>Compara</h3>
-            <p>Benchmark contra tus competidores directos. Share of Voice en el ecosistema IA. Quien te gana en visibilidad, en que modelos, con que tono.</p>
-        </div>
-        <div class="card">
-            <h3>Actua</h3>
-            <p>Con datos reales, no intuiciones. Si tu visibilidad cae, lo sabes. Si un competidor te adelanta, lo ves. Exporta CSV para tus informes. Toma decisiones basadas en evidencia.</p>
-        </div>
+        <div class="card"><span class="feature-icon">(o)</span><h3>Monitoriza</h3><p>Cada dia lanzamos preguntas reales contra cada modelo de IA. Registramos sus respuestas y medimos cuantas veces mencionan tu marca.</p></div>
+        <div class="card"><span class="feature-icon">(i)</span><h3>Analiza</h3><p>Un analyzer con IA extrae de cada respuesta: que marcas se mencionaron, en que orden, con que sentimiento y que fuentes citaron.</p></div>
+        <div class="card"><span class="feature-icon">(=)</span><h3>Compara</h3><p>Benchmark contra tus competidores directos. Share of Voice en el ecosistema IA. Quien te gana y en que modelos.</p></div>
+        <div class="card"><span class="feature-icon">(>)</span><h3>Actua</h3><p>Con datos reales, no intuiciones. Si tu visibilidad cae lo sabes. Si un competidor te adelanta lo ves. Exporta CSV y toma decisiones basadas en evidencia.</p></div>
     </div>
 </section>
 
@@ -87,39 +95,27 @@
 Prompt: "Cual es la mejor herramienta de tracking IA?"
    |
    v
-[OpenRouter] --> ChatGPT / Gemini / Claude / Perplexity / DeepSeek / Qwen / Kimi / GLM / MiniMax
+[OpenRouter] -> ChatGPT / Gemini / Claude / Perplexity / DeepSeek / Qwen / Kimi / GLM / MiniMax
    |
    v
 Respuestas crudas (almacenadas)
    |
    v
-[DeepSeek Analyzer] --> Extrae: menciones, posicion, sentimiento, fuentes
+[DeepSeek Analyzer] -> Extrae: menciones, posicion, sentimiento, fuentes
    |
    v
-[Daily Snapshot] --> Agregado diario (lo unico que lee el dashboard)
+[Daily Snapshot] -> Agregado diario
    |
    v
-[Dashboard] --> Grafica de evolucion, benchmark competitivo, ranking de fuentes, export CSV</pre>
+[Dashboard] -> Graficas, benchmark, fuentes, export CSV</pre>
     </div>
     <ol class="steps">
-        <li>
-            <div><h3>Define tu proyecto</h3><p>Nombre de tu marca, dominio web, y los competidores contra los que quieres compararte. Indicas en que idioma y pais operas.</p></div>
-        </li>
-        <li>
-            <div><h3>Crea prompts</h3><p>Preguntas conversacionales reales que harian tus clientes potenciales. "Cual es el mejor CRM para pymes?", "Que plataforma de tracking IA recomiendas?". Agrupalos por temas.</p></div>
-        </li>
-        <li>
-            <div><h3>Selecciona modelos</h3><p>9 modelos disponibles. Desde occidentales (ChatGPT, Gemini, Claude, Perplexity) a chinos (DeepSeek, Qwen, Kimi, GLM, MiniMax). Activa los que quieras trackear.</p></div>
-        </li>
-        <li>
-            <div><h3>Configura tus APIs</h3><p>Trae tu propia clave (BYOK). Solo necesitas una cuenta en OpenRouter para los modelos y una en DeepSeek para el analyzer. Sin suscripciones mensuales fijas.</p></div>
-        </li>
-        <li>
-            <div><h3>Activa los crons</h3><p>El sistema ejecuta consultas automaticamente cada dia. El pipeline plan -> run -> analyze -> snapshot se encarga de todo. Los resultados aparecen en minutos.</p></div>
-        </li>
-        <li>
-            <div><h3>Monitoriza el dashboard</h3><p>Visibilidad por modelo, evolucion temporal, posicionamiento frente a competidores, fuentes mas citadas. Exporta CSV para tus informes.</p></div>
-        </li>
+        <li><div><h3>Define tu proyecto</h3><p>Nombre de tu marca, dominio web, y los competidores contra los que quieres compararte.</p></div></li>
+        <li><div><h3>Crea prompts</h3><p>Preguntas conversacionales reales que harian tus clientes. Agrupalos por temas.</p></div></li>
+        <li><div><h3>Selecciona modelos</h3><p>9 modelos disponibles, desde occidentales a chinos. Activa los que quieras trackear.</p></div></li>
+        <li><div><h3>Configura tus APIs</h3><p>BYOK -- trae tu propia clave. Solo necesitas OpenRouter y DeepSeek. Sin suscripciones fijas.</p></div></li>
+        <li><div><h3>Activa los crons</h3><p>El pipeline plan -> run -> analyze -> snapshot se encarga de todo automaticamente.</p></div></li>
+        <li><div><h3>Monitoriza el dashboard</h3><p>Visibilidad por modelo, evolucion temporal, benchmark, fuentes mas citadas. Export CSV.</p></div></li>
     </ol>
 </section>
 
@@ -140,32 +136,12 @@ Respuestas crudas (almacenadas)
 </section>
 
 <section class="container">
-    <h2>Para quien es</h2>
-    <div class="grid">
-        <div class="card"><h3>Agencias de marketing</h3><p>Monitoriza la visibilidad de tus clientes en IA. Informes automatizados, benchmarks, metricas profesionales. Demuestra ROI real.</p></div>
-        <div class="card"><h3>Empresas SaaS</h3><p>Sabes si los asistentes de IA te recomiendan? Si tu competidor aparece antes que tu? Con datos, no con intuiciones.</p></div>
-        <div class="card"><h3>Consultores SEO</h3><p>El SEO tradicional migra hacia GEO. Los LLMs son el nuevo buscador. Ofrece a tus clientes el servicio que les falta.</p></div>
-        <div class="card"><h3>Empresas con presencia internacional</h3><p>Si operas en Asia o LATAM, necesitas saber que dicen los modelos chinos, no solo los occidentales. Cobertura multi-idioma real.</p></div>
-    </div>
-</section>
-
-<section class="container">
-    <h2>Stack tecnico</h2>
-    <div class="grid">
-        <div class="card"><h3>PHP 8.3 + MySQL</h3><p>Sin frameworks, sin Composer. PDO nativo. Funciona en hosting compartido. Disenado para ser ligero y rapido.</p></div>
-        <div class="card"><h3>OpenRouter API</h3><p>Un solo endpoint para todos los modelos. Gestion centralizada de costes. BYOK (Bring Your Own Key).</p></div>
-        <div class="card"><h3>DeepSeek Analyzer</h3><p>Parseo de respuestas sin depender de Claude ni OpenAI. Coste por analisis: fracciones de centimo.</p></div>
-        <div class="card"><h3>Chart.js + Vanilla JS</h3><p>Dashboard interactivo con graficas. Sin React, sin Vue, sin dependencias pesadas.</p></div>
-    </div>
-</section>
-
-<section class="container">
     <h2>Diferencial frente a Peec / Profound</h2>
     <div class="grid">
         <div class="card"><h3>Modelos chinos incluidos</h3><p>DeepSeek, Qwen, Kimi, GLM-4, MiniMax. La competencia occidental no los trackea. Son el 40% del trafico mundial de LLMs.</p></div>
-        <div class="card"><h3>Multi-idioma nativo</h3><p>Espanol, ingles y cualquier idioma que quieras configurar. Disenado desde cero para multi-idioma, no anadido despues.</p></div>
-        <div class="card"><h3>BYOK -- pagas solo lo que usas</h3><p>Sin suscripcion mensual fija. Con tus propias APIs de OpenRouter y DeepSeek. Coste tipico: menos de $5/mes para seguimiento diario.</p></div>
-        <div class="card"><h3>Codigo abierto</h3><p>MIT. Lo instalas en tu servidor, lo auditas, lo modificas. Sin vendor lock-in. Sin limites artificiales de prompts o proyectos.</p></div>
+        <div class="card"><h3>Multi-idioma nativo</h3><p>Espanol, ingles y cualquier idioma. Disenado desde cero para multi-idioma, no anadido despues.</p></div>
+        <div class="card"><h3>BYOK -- sin suscripcion fija</h3><p>Con tus propias APIs. Coste tipico: menos de $5/mes para seguimiento diario completo.</p></div>
+        <div class="card"><h3>Codigo abierto</h3><p>Lo instalas, lo auditas, lo modificas. Sin vendor lock-in. Sin limites artificiales de prompts o proyectos.</p></div>
     </div>
 </section>
 
@@ -175,7 +151,8 @@ Respuestas crudas (almacenadas)
 </div>
 
 <div class="footer">
-    <p>Kraak Radar -- Copyright (c) 2026 <a href="https://kraak.app">KraakVC OU</a> | Lead Developer: <a href="https://github.com/rmickel81">Roberto Mickel</a> | Non-Commercial License</p>
+    <img src="assets/img/kraak-logo.png" alt="Kraak" class="footer-logo">
+    <p>Copyright (c) 2026 <a href="https://kraak.app">KraakVC OU</a> | Lead Developer: <a href="https://github.com/rmickel81">Roberto Mickel</a> | Non-Commercial License</p>
 </div>
 
 </body>

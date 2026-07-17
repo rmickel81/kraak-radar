@@ -1,12 +1,13 @@
 <?php
 /**
  * Analyzer: parsea respuestas crudas a JSON estructurado
- * Usa DeepSeek v4-flash en lugar de Haiku (sin Claude)
+ * Usa DeepSeek v4-flash (sin Claude / sin Haiku)
  * 
  * Coste típico: ~200-400 tokens por respuesta → fracciones de céntimo
+ * BYOK: si $apiKey es null, usa la key global de config.
  */
 
-function analyzeAnswer(int $answerId, string $rawText, string $brandName, string $brandDomain, array $aliases, array $competitors): array {
+function analyzeAnswer(string $rawText, string $brandName, string $brandDomain, array $aliases, array $competitors, ?string $apiKey = null): array {
     $systemPrompt = <<<'PROMPT'
 Eres un extractor de datos. Analizas respuestas de asistentes de IA sobre marcas y productos.
 Devuelves SOLO JSON válido, sin markdown, sin explicaciones, sin prefijo.
@@ -57,40 +58,53 @@ Respuesta del asistente a analizar:
 ---
 PROMPT;
 
-    $client = new DeepSeekClient(DEEPSEEK_API_KEY, DEEPSEEK_MODEL);
+    $client = new DeepSeekClient($apiKey ?: DEEPSEEK_API_KEY, DEEPSEEK_MODEL);
     $result = $client->chat($systemPrompt, $userPrompt);
 
     if (isset($result['error'])) {
         return ['error' => $result['error']];
     }
 
-    // Intentar parsear JSON
-    $text = $result['text'];
-    // Limpiar posibles wrappers markdown
-    $text = preg_replace('/^```(?:json)?\s*/i', '', $text);
-    $text = preg_replace('/\s*```$/', '', $text);
-    $text = trim($text);
+    $tokensIn  = $result['tokens_in'];
+    $tokensOut = $result['tokens_out'];
 
-    $parsed = json_decode($text, true);
+    // Intentar parsear JSON (limpiando posibles wrappers markdown)
+    $parsed = parseJsonResponse($result['text']);
+
     if (!$parsed) {
         // Reintento con un prompt más explícito
         $retryPrompt = $userPrompt . "\n\nDevuelve ÚNICAMENTE un JSON válido. Sin markdown, sin explicaciones.";
         $result2 = $client->chat($systemPrompt, $retryPrompt);
-        if (!isset($result2['error'])) {
-            $text2 = preg_replace('/^```(?:json)?\s*/i', '', $result2['text']);
-            $text2 = preg_replace('/\s*```$/', '', $text2);
-            $text2 = trim($text2);
-            $parsed = json_decode($text2, true);
+        if (isset($result2['error'])) {
+            return ['error' => $result2['error']];
         }
+        $tokensIn  += $result2['tokens_in'];
+        $tokensOut += $result2['tokens_out'];
+        $parsed = parseJsonResponse($result2['text']);
     }
 
     if (!$parsed || !isset($parsed['brands'])) {
         return ['error' => 'No se pudo extraer JSON estructurado'];
     }
 
+    // Normalizar: garantizar que sources existe
+    if (!isset($parsed['sources']) || !is_array($parsed['sources'])) {
+        $parsed['sources'] = [];
+    }
+
     return [
-        'data'         => $parsed,
-        'tokens_in'    => $result['tokens_in'],
-        'tokens_out'   => $result['tokens_out'],
+        'data'       => $parsed,
+        'tokens_in'  => $tokensIn,
+        'tokens_out' => $tokensOut,
     ];
+}
+
+/**
+ * Extrae JSON de una respuesta del analyzer (tolera fences markdown).
+ */
+function parseJsonResponse(string $text): ?array {
+    $text = preg_replace('/^```(?:json)?\s*/i', '', trim($text));
+    $text = preg_replace('/\s*```$/', '', $text);
+    $parsed = json_decode(trim($text), true);
+    return is_array($parsed) ? $parsed : null;
 }

@@ -1,5 +1,7 @@
--- Kraak Radar — Esquema de base de datos
+-- Kraak Radar — Esquema de base de datos (v4 consolidado)
 -- MySQL 8.0+ / MariaDB 10.6+
+-- Incluye: registros landing, lock_owner, UNIQUE(job_id), reintentos analyzer,
+-- precios por modelo y tabla settings. Sustituye a schema.sql + schema_v2.sql.
 
 CREATE DATABASE IF NOT EXISTS kraak_radar CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE kraak_radar;
@@ -12,11 +14,22 @@ CREATE TABLE users (
   name          VARCHAR(120) NOT NULL,
   plan          ENUM('free','starter','pro','agency') NOT NULL DEFAULT 'free',
   prompt_quota  SMALLINT UNSIGNED NOT NULL DEFAULT 5,
+  is_admin      TINYINT(1) NOT NULL DEFAULT 0,
   openrouter_key VARCHAR(255) NULL,
   deepseek_key   VARCHAR(255) NULL,
   last_login_at  DATETIME NULL,
-  is_admin       TINYINT(1) NOT NULL DEFAULT 0,
-  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_last_login (last_login_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Registros desde la landing pública (pre-pago)
+CREATE TABLE registrations (
+  id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name       VARCHAR(120) NOT NULL,
+  email      VARCHAR(190) NOT NULL UNIQUE,
+  plan       ENUM('starter','pro','agency') NOT NULL,
+  domain     VARCHAR(190) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Proyectos
@@ -47,12 +60,15 @@ CREATE TABLE competitors (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Modelos disponibles
+-- price_*_usd: USD por 1M tokens (entrada/salida). 0 = revisar/editar manualmente.
 CREATE TABLE models (
   id            SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   slug          VARCHAR(120) NOT NULL UNIQUE,
   display_name  VARCHAR(80) NOT NULL,
   family        VARCHAR(40) NOT NULL,
   has_web_search TINYINT(1) NOT NULL DEFAULT 0,
+  price_in_usd  DECIMAL(10,4) NOT NULL DEFAULT 0,
+  price_out_usd DECIMAL(10,4) NOT NULL DEFAULT 0,
   is_active     TINYINT(1) NOT NULL DEFAULT 1,
   sort_order    TINYINT UNSIGNED NOT NULL DEFAULT 100
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -88,6 +104,7 @@ CREATE TABLE prompts (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Cola de trabajos
+-- lock_owner: token único por proceso runner (evita doble ejecución concurrente)
 CREATE TABLE jobs (
   id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   prompt_id   INT UNSIGNED NOT NULL,
@@ -97,25 +114,31 @@ CREATE TABLE jobs (
   attempts    TINYINT UNSIGNED NOT NULL DEFAULT 0,
   last_error  VARCHAR(255) NULL,
   locked_at   DATETIME NULL,
+  lock_owner  VARCHAR(40) NULL,
   created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_job (prompt_id, model_id, run_date),
-  KEY idx_pick (status, id)
+  KEY idx_pick (status, id),
+  KEY idx_recovery (status, locked_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Respuestas crudas
+-- analyzed: 0 = pendiente, 1 = analizada, 2 = error permanente (tras MAX_RETRIES)
 CREATE TABLE answers (
-  id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  job_id     BIGINT UNSIGNED NOT NULL,
-  project_id INT UNSIGNED NOT NULL,
-  prompt_id  INT UNSIGNED NOT NULL,
-  model_id   SMALLINT UNSIGNED NOT NULL,
-  run_date   DATE NOT NULL,
-  raw_text   MEDIUMTEXT NOT NULL,
-  tokens_in  INT UNSIGNED NULL,
-  tokens_out INT UNSIGNED NULL,
-  cost_usd   DECIMAL(10,6) NULL,
-  analyzed   TINYINT(1) NOT NULL DEFAULT 0,
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id               BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  job_id           BIGINT UNSIGNED NOT NULL,
+  project_id       INT UNSIGNED NOT NULL,
+  prompt_id        INT UNSIGNED NOT NULL,
+  model_id         SMALLINT UNSIGNED NOT NULL,
+  run_date         DATE NOT NULL,
+  raw_text         MEDIUMTEXT NOT NULL,
+  tokens_in        INT UNSIGNED NULL,
+  tokens_out       INT UNSIGNED NULL,
+  cost_usd         DECIMAL(10,6) NULL,
+  analyzed         TINYINT(1) NOT NULL DEFAULT 0,
+  analyze_attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  analyze_error    VARCHAR(255) NULL,
+  created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_answer_job (job_id),
   KEY idx_analyze (analyzed, id),
   KEY idx_proj_date (project_id, run_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -149,7 +172,9 @@ CREATE TABLE sources (
   CONSTRAINT fk_src_ans FOREIGN KEY (answer_id) REFERENCES answers(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Agregado diario
+-- Agregado diario (el dashboard SOLO lee de aquí)
+-- entity_name: brand_name real para 'brand', nombre del competidor para 'competitor'.
+-- model_id NULL = agregado global de todos los modelos (upsert gestionado por código).
 CREATE TABLE daily_snapshots (
   id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   project_id      INT UNSIGNED NOT NULL,
@@ -165,18 +190,6 @@ CREATE TABLE daily_snapshots (
   UNIQUE KEY uq_snap (project_id, run_date, model_id, entity_type, entity_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Modelos iniciales
-INSERT INTO models (slug, display_name, family, has_web_search, is_active, sort_order) VALUES
-('openai/gpt-4o',            'ChatGPT (GPT-4o)',        'openai',      1, 1, 10),
-('google/gemini-2.0-flash', 'Gemini 2.0 Flash',        'google',      1, 1, 20),
-('anthropic/claude-sonnet-4','Claude Sonnet 4',         'anthropic',   0, 1, 30),
-('perplexity/sonar-pro',     'Perplexity Sonar Pro',    'perplexity',  1, 1, 40),
-('deepseek/deepseek-chat',   'DeepSeek Chat',           'deepseek',    1, 1, 50),
-('qwen/qwen-2.5-72b-instruct','Qwen 2.5 72B',          'qwen',        0, 1, 60),
-('kimi/kimi-chat',           'Kimi Chat',               'moonshot',    0, 1, 70),
-('glm/glm-4',                'GLM-4 (Zhipu)',           'glm',         0, 1, 80),
-('minimax/minimax-chat',     'MiniMax Chat',            'minimax',     0, 1, 90);
-
 -- Registro de costes
 CREATE TABLE cost_log (
   id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -188,12 +201,32 @@ CREATE TABLE cost_log (
   cost_usd    DECIMAL(10,6) NOT NULL DEFAULT 0,
   source      ENUM('openrouter','deepseek_analyzer') NOT NULL DEFAULT 'openrouter',
   created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY idx_proj_date (project_id, run_date)
+  KEY idx_proj_date (project_id, run_date),
+  KEY idx_date (run_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Configuracion del sistema
+-- Configuración del sistema
 CREATE TABLE settings (
   `key`   VARCHAR(80) PRIMARY KEY,
   `value` TEXT NULL,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO settings (`key`, `value`) VALUES
+('app_version', '4.0.0'),
+('default_openrouter_key', ''),
+('deepseek_default_model', 'deepseek-v4-flash'),
+('tracking_enabled', '1'),
+('max_prompts_per_project', '50');
+
+-- Modelos iniciales (precios orientativos por 1M tokens, editables)
+INSERT INTO models (slug, display_name, family, has_web_search, price_in_usd, price_out_usd, is_active, sort_order) VALUES
+('openai/gpt-4o',             'ChatGPT (GPT-4o)',     'openai',     1,  2.5000, 10.0000, 1, 10),
+('google/gemini-2.0-flash',   'Gemini 2.0 Flash',     'google',     1,  0.1000,  0.4000, 1, 20),
+('anthropic/claude-sonnet-4', 'Claude Sonnet 4',      'anthropic',  0,  3.0000, 15.0000, 1, 30),
+('perplexity/sonar-pro',      'Perplexity Sonar Pro', 'perplexity', 1,  3.0000, 15.0000, 1, 40),
+('deepseek/deepseek-chat',    'DeepSeek Chat',        'deepseek',   1,  0.2700,  1.1000, 1, 50),
+('qwen/qwen-2.5-72b-instruct','Qwen 2.5 72B',         'qwen',       0,  0.3500,  0.3500, 1, 60),
+('kimi/kimi-chat',            'Kimi Chat',            'moonshot',   0,  0.0000,  0.0000, 1, 70),
+('glm/glm-4',                 'GLM-4 (Zhipu)',        'glm',        0,  0.0000,  0.0000, 1, 80),
+('minimax/minimax-chat',      'MiniMax Chat',         'minimax',    0,  0.0000,  0.0000, 1, 90);

@@ -27,7 +27,7 @@ if ($project) {
     $snapshots = DB::fetchAll(
         "SELECT run_date, visibility_pct, answers_total, mentions_count
          FROM daily_snapshots
-         WHERE project_id = ? AND model_id IS NULL AND entity_name = 'total'
+         WHERE project_id = ? AND model_id IS NULL AND entity_type = 'brand'
            AND run_date >= ?
          ORDER BY run_date ASC",
         [$projectId, $dateFrom]
@@ -38,8 +38,9 @@ if ($project) {
         "SELECT m.display_name, s.visibility_pct, s.avg_position, s.sentiment_avg, s.mentions_count, s.answers_total
          FROM daily_snapshots s
          JOIN models m ON m.id = s.model_id
-         WHERE s.project_id = ? AND s.entity_type = 'brand'
-           AND s.run_date = (SELECT MAX(run_date) FROM daily_snapshots WHERE project_id = ? AND model_id = s.model_id AND entity_name = 'mi_marca')
+         WHERE s.project_id = ? AND s.entity_type = 'brand' AND s.model_id IS NOT NULL
+           AND s.run_date = (SELECT MAX(run_date) FROM daily_snapshots
+                             WHERE project_id = ? AND model_id = s.model_id AND entity_type = 'brand')
          ORDER BY m.sort_order",
         [$projectId, $projectId]
     );
@@ -61,6 +62,9 @@ if ($project) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kraak Radar — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </head>
@@ -165,7 +169,7 @@ if ($project) {
             <div class="dash-header">
                 <h2><?= htmlspecialchars($project['name']) ?></h2>
                 <div class="controls">
-                    <a href="seed.php?project=<?= $projectId ?>" class="btn-seed" onclick="return confirm('¿Generar datos de prueba para los últimos 14 días?')">Generar datos de prueba</a>
+                    <a href="seed.php?project=<?= $projectId ?>" class="btn-seed">Generar datos de prueba</a>
                     <select onchange="location='?project=<?= $projectId ?>&days='+this.value">
                         <option value="7"  <?= $days==7 ?'selected':''?>>7 días</option>
                         <option value="30" <?= $days==30?'selected':''?>>30 días</option>
@@ -252,8 +256,8 @@ if ($project) {
             datasets: [{
                 label: 'Visibilidad (%)',
                 data: values,
-                borderColor: '#6c5ce7',
-                backgroundColor: 'rgba(108,92,231,0.1)',
+                borderColor: '#58a6ff',
+                backgroundColor: 'rgba(88,166,255,0.12)',
                 fill: true,
                 tension: 0.3,
                 pointRadius: 3,

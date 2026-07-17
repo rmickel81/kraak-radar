@@ -12,6 +12,8 @@ $projectId = (int) ($_GET['project'] ?? ($projects[0]['id'] ?? 0));
 $project = DB::fetchOne('SELECT * FROM projects WHERE id = ? AND user_id = ?', [$projectId, $user['id']]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $project && isset($_POST['export'])) {
+    csrfVerify();
+
     $days = (int) ($_POST['days'] ?? 30);
     $type = $_POST['type'] ?? 'visibility';
     $dateFrom = date('Y-m-d', strtotime("-{$days} days"));
@@ -64,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $project && isset($_POST['export'])
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Exportar</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Exportar</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
 <div class="app-layout">
     <?php require_once __DIR__ . '/sidebar.php'; ?>

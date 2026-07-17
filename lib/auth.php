@@ -141,3 +141,20 @@ function logoutUser(): void {
     $_SESSION = [];
     session_destroy();
 }
+
+// ── Redirect seguro ──
+
+/**
+ * Devuelve una URL de redirección local segura (anti open-redirect).
+ * Solo permite rutas relativas de la propia app; cualquier cosa externa
+ * (http://, //, backslashes, ..) cae al destino por defecto.
+ */
+function safeRedirect(string $url, string $default = 'dashboard.php'): string {
+    $url = trim($url);
+    if ($url === '') return $default;
+    if (preg_match('#^[a-z][a-z0-9+.-]*://#i', $url)) return $default; // cualquier esquema
+    if (str_starts_with($url, '//') || str_contains($url, '\\')) return $default;
+    if (str_contains($url, '..')) return $default;
+    if (!preg_match('#^[a-zA-Z0-9_./?=&%:-]+$#', $url)) return $default;
+    return $url;
+}

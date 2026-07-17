@@ -20,7 +20,7 @@
     --radius: 8px;
     --radius-sm: 6px;
     --shadow: 0 1px 3px rgba(0,0,0,0.3);
-    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
     --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
@@ -35,6 +35,13 @@ body {
 }
 a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-hover); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* Scrollbar discreta */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
 
 /* ═══ Layout: Sidebar + Main ═══ */
 .app-layout {
@@ -97,6 +104,7 @@ a:hover { color: var(--accent-hover); }
     background: rgba(88,166,255,0.12);
     color: var(--accent);
     font-weight: 600;
+    box-shadow: inset 2px 0 0 var(--accent);
 }
 .sidebar-link .s-icon {
     font-size: 16px;
@@ -324,6 +332,7 @@ button, .btn, .btn-primary {
     color: #fff;
     font-size: 14px;
     font-weight: 500;
+    font-family: inherit;
     cursor: pointer;
     white-space: nowrap;
     transition: background 0.15s;

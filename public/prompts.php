@@ -43,7 +43,7 @@ $pmIds = array_column($projectModels, 'model_id');
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Prompts</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Prompts</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
 <div class="app-layout">
     <?php require_once __DIR__ . '/sidebar.php'; ?>
@@ -75,6 +75,7 @@ $pmIds = array_column($projectModels, 'model_id');
         <div class="card">
             <h3>Temas</h3>
             <form method="post" class="form-inline">
+                <?= csrfField() ?>
                 <input type="text" name="topic_name" placeholder="Nombre del tema">
                 <button type="submit" name="topic_add">Crear</button>
             </form>
@@ -85,6 +86,7 @@ $pmIds = array_column($projectModels, 'model_id');
     <div class="card">
         <h3>Modelos Activos</h3>
         <form method="post" action="save_models.php" class="form-inline">
+            <?= csrfField() ?>
             <input type="hidden" name="project_id" value="<?=$projectId?>">
             <div class="model-grid">
             <?php foreach ($models as $m): ?>

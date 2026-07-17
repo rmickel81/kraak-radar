@@ -40,7 +40,7 @@ if ($project) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Fuentes</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Fuentes</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
 <div class="app-layout">
     <?php require_once __DIR__ . '/sidebar.php'; ?>
@@ -59,7 +59,6 @@ if ($project) {
                 <?php foreach ($projects as $p): ?><option value="<?=$p['id']?>" <?=$p['id']==$projectId?'selected':''?>><?=htmlspecialchars($p['name'])?></option><?php endforeach; ?>
             </select>
         </div>
-    </div>
     <?php if ($project): ?>
     <div class="grid-2">
         <div class="card">

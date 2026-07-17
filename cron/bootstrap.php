@@ -32,6 +32,7 @@ if (!is_dir(LOG_PATH)) {
 require_once BASE_PATH . '/lib/db.php';
 require_once BASE_PATH . '/lib/deepseek.php';
 require_once BASE_PATH . '/lib/analyzer.php';
+require_once BASE_PATH . '/lib/aggregation.php';
 
 function logMsg(string $msg): void {
     $ts = date('Y-m-d H:i:s');

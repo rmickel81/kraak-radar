@@ -16,12 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $openrouterKey = trim($_POST['openrouter_key'] ?? '');
     $deepseekKey   = trim($_POST['deepseek_key'] ?? '');
     
-    DB::execute(
-        "UPDATE users SET openrouter_key = ?, deepseek_key = ? WHERE id = ?",
-        [$openrouterKey ?: null, $deepseekKey ?: null, $user['id']]
-    );
-    
-    // Probar OpenRouter si hay key
+    // Validar ANTES de guardar: solo persistimos claves que funcionan
     if ($openrouterKey) {
         $ch = curl_init('https://openrouter.ai/api/v1/auth/key');
         curl_setopt_array($ch, [
@@ -29,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 10,
         ]);
-        $raw = curl_exec($ch);
+        curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         if ($httpCode !== 200) {
@@ -37,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Probar DeepSeek si hay key
     if ($deepseekKey && empty($error)) {
         $ch = curl_init('https://api.deepseek.com/models');
         curl_setopt_array($ch, [
@@ -54,6 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (empty($error)) {
+        DB::execute(
+            "UPDATE users SET openrouter_key = ?, deepseek_key = ? WHERE id = ?",
+            [$openrouterKey ?: null, $deepseekKey ?: null, $user['id']]
+        );
         $saved = true;
         $user = DB::fetchOne('SELECT * FROM users WHERE id = ?', [$user['id']]);
     }
@@ -79,6 +77,9 @@ $hasOpenRouter = !empty($user['openrouter_key']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kraak Radar — APIs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -124,7 +125,7 @@ $hasOpenRouter = !empty($user['openrouter_key']);
 
                 <div class="api-section">
                     <h3>
-                        <span class="api-icon"><?php echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'; ?></span>
+                        <span class="api-icon"><?php echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>'; ?></span>
                         DeepSeek
                         <?php if ($hasDeepSeek): ?><span class="badge badge-ok">Conectado</span>
                         <?php else: ?><span class="badge badge-off">Sin configurar</span><?php endif; ?>

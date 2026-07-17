@@ -30,7 +30,7 @@ $competitors = $project ? DB::fetchAll('SELECT * FROM competitors WHERE project_
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Competidores</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kraak Radar — Competidores</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
 <div class="app-layout">
     <?php require_once __DIR__ . '/sidebar.php'; ?>
@@ -61,7 +61,7 @@ $competitors = $project ? DB::fetchAll('SELECT * FROM competitors WHERE project_
             <tbody><?php foreach ($competitors as $c): $als = json_decode($c['aliases'] ?? '[]', true); ?>
                 <tr><td><?=htmlspecialchars($c['name'])?></td><td><?=htmlspecialchars($c['domain']??'-')?></td>
                 <td><?= $als ? implode(', ', $als) : '-' ?></td>
-                <td><form method="post" onsubmit="return confirm('¿Eliminar?')"><input type="hidden" name="id" value="<?=$c['id']?>"><button type="submit" name="delete" class="btn-sm btn-danger">Eliminar</button></form></td>
+                <td><form method="post" onsubmit="return confirm('¿Eliminar?')"><?= csrfField() ?><input type="hidden" name="id" value="<?=$c['id']?>"><button type="submit" name="delete" class="btn-sm btn-danger">Eliminar</button></form></td>
             </tr><?php endforeach; ?></tbody>
         </table>
         <?php else: ?><p class="note">Añade competidores para trackear su visibilidad frente a la tuya.</p><?php endif; ?>

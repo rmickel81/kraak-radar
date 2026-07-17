@@ -8,6 +8,8 @@ require_once dirname(__DIR__) . '/lib/auth.php';
 $user = requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrfVerify();
+
     $name = trim($_POST['name'] ?? '');
     $brandName = trim($_POST['brand_name'] ?? '');
     $brandDomain = trim($_POST['brand_domain'] ?? '');

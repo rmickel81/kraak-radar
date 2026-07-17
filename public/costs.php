@@ -102,12 +102,21 @@ $projectedMonth = $daysInPeriod > 0 ? ($monthlyTotal / $daysInPeriod) * 30 : 0;
                 <span class="kpi-label">Coste / prompt</span>
                 <span class="kpi-value">~
                     <?php
-                    $totalAnswers = DB::fetchOne(
-                        "SELECT COUNT(*) as c FROM answers a
-                         JOIN projects p ON p.id = a.project_id
-                         WHERE p.user_id = ? AND a.run_date >= ?",
-                        [$user['id'], $dateFrom]
-                    )['c'] ?? 0;
+                    // Respuestas del período (filtradas por proyecto si hay uno seleccionado)
+                    if ($projectId) {
+                        $totalAnswers = DB::fetchOne(
+                            "SELECT COUNT(*) as c FROM answers
+                             WHERE project_id = ? AND run_date >= ?",
+                            [$projectId, $dateFrom]
+                        )['c'] ?? 0;
+                    } else {
+                        $totalAnswers = DB::fetchOne(
+                            "SELECT COUNT(*) as c FROM answers a
+                             JOIN projects p ON p.id = a.project_id
+                             WHERE p.user_id = ? AND a.run_date >= ?",
+                            [$user['id'], $dateFrom]
+                        )['c'] ?? 0;
+                    }
                     echo $totalAnswers > 0 ? '$' . number_format($monthlyTotal / $totalAnswers, 6) : '-';
                     ?>
                 </span>

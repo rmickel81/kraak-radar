@@ -45,22 +45,23 @@ class OpenRouter {
         curl_close($ch);
 
         if ($error) {
-            return ['error' => 'curl: ' . $error];
+            return ['error' => 'curl: ' . $error, 'http_code' => 0];
         }
 
+        $httpCode = (int) ($info['http_code'] ?? 0);
         $data = json_decode($raw, true);
         if (!$data) {
-            return ['error' => 'json_parse: ' . substr($raw, 0, 500)];
+            return ['error' => 'json_parse: ' . substr($raw, 0, 500), 'http_code' => $httpCode];
         }
 
         if (isset($data['error'])) {
             $msg = $data['error']['message'] ?? json_encode($data['error']);
-            return ['error' => 'api: ' . $msg];
+            return ['error' => 'api: ' . $msg, 'http_code' => $httpCode];
         }
 
         $choice = $data['choices'][0] ?? null;
         if (!$choice || !isset($choice['message']['content'])) {
-            return ['error' => 'no_choice: ' . substr($raw, 0, 500)];
+            return ['error' => 'no_choice: ' . substr($raw, 0, 500), 'http_code' => $httpCode];
         }
 
         $usage = $data['usage'] ?? [];
@@ -73,7 +74,8 @@ class OpenRouter {
     }
 
     /**
-     * Reintenta con backoff hasta MAX_RETRIES
+     * Reintenta con backoff SOLO errores transitorios (curl, 429, 5xx).
+     * Errores definitivos (401, 403, 404, modelo inválido) fallan inmediato.
      */
     public function chatWithRetry(string $model, string $prompt, array $extra = []): array {
         $attempts = 0;
@@ -84,6 +86,12 @@ class OpenRouter {
                 return $result;
             }
             $lastError = $result['error'];
+            $code = $result['http_code'] ?? 0;
+            $transient = str_starts_with($lastError, 'curl:')
+                || $code === 0 || $code === 429 || $code >= 500;
+            if (!$transient) {
+                return $result; // definitivo: reintentar no arregla nada
+            }
             $attempts++;
             if ($attempts < MAX_RETRIES) {
                 sleep(pow(2, $attempts)); // backoff: 2s, 4s, 8s
